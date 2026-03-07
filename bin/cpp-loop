@@ -3,7 +3,8 @@ source "$(sc-libs)"
 core::init
 process::require "clang++"
 
-DIR=$(temp::dir)
+DIR=""
+temp::dir DIR
 BIN="$DIR/bin"
 OUT="$DIR/out"
 IN="$1.in"

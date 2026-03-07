@@ -6,15 +6,15 @@ SCRIPTS_DIR="$(dirname "$LIB_DIR")"
 
 core::init() {
     set -euo pipefail
+    trap core::_exit EXIT INT TERM
     log::debug "Initied core"
 }
 
 core::_exit() {
+    log::debug "Exiting script"
     temp::cleanup
     lock::release
 }
-
-trap core::_exit EXIT INT TERM
 
 for lib in "$LIB_DIR"/*.bash
 do
