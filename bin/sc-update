@@ -5,8 +5,9 @@ process::require "git"
 
 cd "$SCRIPTS_DIR"
 
-log::info "Pulling repository"
-git pull
+log::info "Updating repository"
+git fetch
+git reset --hard origin/HEAD
 
 log::info "Running bootstrap script"
 exec bash bootstrap.sh

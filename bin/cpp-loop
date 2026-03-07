@@ -2,10 +2,10 @@
 source "$(sc-libs)"
 core::init
 process::require "clang++"
-lock::acquire
 
-BIN="$STATE_DIR/bin"
-OUT="$STATE_DIR/out"
+DIR=$(temp::dir)
+BIN="$DIR/bin"
+OUT="$DIR/out"
 IN="$1.in"
 COMPILE_COMMAND="clang++ -Wall -Wextra"
 
@@ -23,4 +23,5 @@ do
     clear
     cat "$OUT"
     echo
+    poll-change "$1"
 done

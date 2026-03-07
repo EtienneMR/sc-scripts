@@ -1,0 +1,24 @@
+#!/bin/env python3
+import sys
+import os
+import time
+
+
+if len(sys.argv) < 2:
+    print(f"Usage: {sys.argv[0]} <file_to_watch>")
+    sys.exit(1)
+
+filepath = sys.argv[1]
+
+if not os.path.isfile(filepath):
+    raise FileNotFoundError(f"File not found: {filepath}")
+
+last_mtime = os.path.getmtime(filepath)
+delay = 0.5
+
+while True:
+    time.sleep(delay)
+    delay = 1 + delay/2
+    current_mtime = os.path.getmtime(filepath)
+    if current_mtime != last_mtime:
+        break
