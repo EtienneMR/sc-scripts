@@ -1,5 +1,4 @@
-#!/bin/bash
-source "$(sc-libs)"
+source "$("$SC" libs bash)"
 core::init
 
 temp::dir LOGS_DIR

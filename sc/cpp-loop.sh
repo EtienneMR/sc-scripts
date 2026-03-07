@@ -1,5 +1,4 @@
-#!/bin/bash
-source "$(sc-libs)"
+source "$("$SC" libs bash)"
 core::init
 process::require "clang++"
 
@@ -24,5 +23,5 @@ do
     clear
     cat "$OUT"
     echo
-    poll-change "$1"
+    sc utils poll_change "$1"
 done

@@ -1,8 +1,4 @@
-SCRIPT="$(realpath "$0")"
-SCRIPT_NAME="$(basename "$SCRIPT")"
-
-LIB_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-SCRIPTS_DIR="$(dirname "$LIB_DIR")"
+LIB_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 core::init() {
     set -euo pipefail

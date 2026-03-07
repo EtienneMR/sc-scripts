@@ -1,5 +1,5 @@
-LOCK_DIR="${XDG_RUNTIME_DIR:-/tmp}/scripts"
-LOCK_FILE="$LOCK_DIR/$SCRIPT_NAME.lock"
+LOCK_DIR="${XDG_RUNTIME_DIR:-/tmp}/sc"
+LOCK_FILE="$LOCK_DIR/$SC_SCRIPT.lock"
 
 lock::acquire() {
     mkdir -p $LOCK_DIR

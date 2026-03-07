@@ -1,6 +1,0 @@
-#!/bin/bash
-
-BIN_DIR="$(dirname "$(realpath "$0")")"
-SCRIPTS_DIR=$(dirname "$BIN_DIR")
-
-printf "$SCRIPTS_DIR/lib/core.bash\n"
