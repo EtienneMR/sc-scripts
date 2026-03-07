@@ -11,14 +11,16 @@ if len(sys.argv) < 2:
 filepath = sys.argv[1]
 
 if not os.path.isfile(filepath):
-    raise FileNotFoundError(f"File not found: {filepath}")
+    print(f"File not found: {filepath}", file=sys.stderr)
+    sys.exit(1)
 
-last_mtime = os.path.getmtime(filepath)
+start_mtime = current_mtime = os.path.getmtime(filepath)
 delay = 0.5
 
-while True:
-    time.sleep(delay)
-    delay = 1 + delay/2
-    current_mtime = os.path.getmtime(filepath)
-    if current_mtime != last_mtime:
-        break
+try:
+    while start_mtime == current_mtime:
+        time.sleep(delay)
+        delay = 1 + delay/2
+        current_mtime = os.path.getmtime(filepath)
+except InterruptedError:
+    sys.exit(130)
