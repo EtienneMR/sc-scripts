@@ -1,0 +1,12 @@
+#!/bin/bash
+source "$(sc-libs)"
+core::init
+process::require "git"
+
+cd "$SCRIPTS_DIR"
+
+log::info "Pulling repository"
+git pull
+
+log::info "Running bootstrap script"
+exec bash bootstrap.sh

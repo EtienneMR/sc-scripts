@@ -1,0 +1,26 @@
+#!/bin/bash
+source "$(sc-libs)"
+core::init
+process::require "clang++"
+lock::acquire
+
+BIN="$STATE_DIR/bin"
+OUT="$STATE_DIR/out"
+IN="$1.in"
+COMPILE_COMMAND="clang++ -Wall -Wextra"
+
+while :
+do
+    log::info "Compiling " | log::trim
+    rm -f "$BIN"
+    $COMPILE_COMMAND "$1" -o "$BIN" > "$OUT" 2>&1
+    if [ -f "$BIN" ]
+    then
+        printf "Running "
+        RIN="$([ -f "$IN" ] && echo "$IN" || echo "/dev/null")"
+        "$BIN" >> "$OUT" 2>&1 < "$RIN"
+    fi
+    clear
+    cat "$OUT"
+    echo
+done
