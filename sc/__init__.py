@@ -14,6 +14,47 @@ INTERPRETERS = {
     ".fish": "fish",
 }
 
+SHELL_SCRIPTS = {
+    "bash": f"""\
+_{CLI_NAME}_complete() {{
+    local cur raw line
+    local -a before suggestions
+    COMPREPLY=()
+    cur="${{COMP_WORDS[COMP_CWORD]}}"
+    before=("${{COMP_WORDS[@]:1:COMP_CWORD-1}}")
+    if [[ ${{#before[@]}} -eq 0 ]]; then
+        raw=$( '{CLI_MAIN.as_posix()}' --complete "$cur" 2>/dev/null )
+    else
+        raw=$( '{CLI_MAIN.as_posix()}' --complete "${{before[@]}}" "$cur" 2>/dev/null )
+    fi
+    while IFS= read -r line; do [[ -n "$line" ]] && suggestions+=("$line"); done <<< "$raw"
+    COMPREPLY=( $(compgen -W "${{suggestions[*]}}" -- "$cur") )
+}}
+complete -F _{CLI_NAME}_complete {CLI_NAME}\
+""",
+    "zsh": f"""\
+_{CLI_NAME}_complete() {{
+    local -a before suggestions
+    before=("${{words[@]:1:$#words-2}}")
+    local cur="${{words[$#words]}}"
+    if [[ ${{#before[@]}} -eq 0 ]]; then
+        suggestions=( $('{CLI_MAIN.as_posix()}' --complete "$cur" 2>/dev/null) )
+    else
+        suggestions=( $('{CLI_MAIN.as_posix()}' --complete "${{before[@]}}" "$cur" 2>/dev/null) )
+    fi
+    compadd -a suggestions
+}}
+compdef _{CLI_NAME}_complete {CLI_NAME}\
+""",
+    "fish": f"""\
+function __fish_{CLI_NAME}_complete
+    set -l tokens (commandline -opc); set -e tokens[1]
+    '{CLI_MAIN.as_posix()}' --complete $tokens (commandline -ct) 2>/dev/null
+end
+complete -c {CLI_MAIN.as_posix()} -f -a '(__fish_{CLI_NAME}_complete)'\
+""",
+}
+
 
 def scan(directory: Path) -> dict:
     """Recursively build {name: path_or_subtree} from bin/."""
@@ -39,7 +80,6 @@ def resolve(tokens: list, tree: dict) -> tuple:
         return None, tokens
     if isinstance(node, Path):
         return node, tokens[1:]
-    # it's a subtree — keep descending
     child, rest = resolve(tokens[1:], node)
     return (child, rest) if child is not None else (node, tokens[1:])
 
@@ -88,58 +128,6 @@ def usage(tree: dict, prefix=""):
     print_tree(tree)
 
 
-def bash_script(names: list) -> str:
-    d = str(Path(sys.argv[0]).resolve())
-    bindings = "\n".join(f"complete -F _{CLI_NAME}_complete {n}" for n in names)
-    return f"""\
-_{CLI_NAME}_complete() {{
-    local cur raw line
-    local -a before suggestions
-    COMPREPLY=()
-    cur="${{COMP_WORDS[COMP_CWORD]}}"
-    before=("${{COMP_WORDS[@]:1:COMP_CWORD-1}}")
-    if [[ ${{#before[@]}} -eq 0 ]]; then
-        raw=$( '{d}' --complete "$cur" 2>/dev/null )
-    else
-        raw=$( '{d}' --complete "${{before[@]}}" "$cur" 2>/dev/null )
-    fi
-    while IFS= read -r line; do [[ -n "$line" ]] && suggestions+=("$line"); done <<< "$raw"
-    COMPREPLY=( $(compgen -W "${{suggestions[*]}}" -- "$cur") )
-}}
-{bindings}"""
-
-
-def zsh_script(names: list) -> str:
-    d = str(Path(sys.argv[0]).resolve())
-    bindings = "\n".join(f"compdef _{CLI_NAME}_complete {n}" for n in names)
-    return f"""\
-_{CLI_NAME}_complete() {{
-    local -a before suggestions
-    before=("${{words[@]:1:$#words-2}}")
-    local cur="${{words[$#words]}}"
-    if [[ ${{#before[@]}} -eq 0 ]]; then
-        suggestions=( $('{d}' --complete "$cur" 2>/dev/null) )
-    else
-        suggestions=( $('{d}' --complete "${{before[@]}}" "$cur" 2>/dev/null) )
-    fi
-    compadd -a suggestions
-}}
-{bindings}"""
-
-
-def fish_script(names: list) -> str:
-    d = str(Path(sys.argv[0]).resolve())
-    bindings = "\n".join(
-        f"complete -c {n} -f -a '(__fish_{CLI_NAME}_complete)'" for n in names
-    )
-    return f"""\
-function __fish_{CLI_NAME}_complete
-    set -l tokens (commandline -opc); set -e tokens[1]
-    '{d}' --complete $tokens (commandline -ct) 2>/dev/null
-end
-{bindings}"""
-
-
 def main():
     tree = scan(CLI_MAIN.parent)
     args = sys.argv[1:]
@@ -155,15 +143,13 @@ def main():
         return 0
 
     if args[0] == "--install-completion":
-        shells = {"bash", "zsh", "fish"}
-        rest = args[1:]
-        shell = next((a for a in rest if a in shells), _detect_shell())
-        extra = [a for a in rest if a not in shells]
-        all_names = sorted({CLI_NAME, Path(sys.argv[0]).name} | set(extra))
-        scripts = {"bash": bash_script, "zsh": zsh_script, "fish": fish_script}
-        if shell not in scripts:
-            sys.exit(f"error: unknown shell '{shell}'. Choose: bash, zsh, fish")
-        print(scripts[shell](all_names))
+        shell = detect_shell()
+        script = SHELL_SCRIPTS.get(shell)
+        if script is None:
+            sys.exit(
+                f"error: unknown shell '{shell}'. Choose: {', '.join(SHELL_SCRIPTS.keys())}"
+            )
+        print(script)
         return 0
 
     node, remaining = resolve(args, tree)
@@ -182,8 +168,3 @@ def main():
             return 1
 
     return run(node, remaining)
-
-
-def _detect_shell():
-    shell = os.environ.get("SHELL", "")
-    return next((n for n in ["zsh", "fish", "bash"] if n in shell), "sh")
