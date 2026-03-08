@@ -29,4 +29,4 @@ append_once "$RC" ".local/bin" "export PATH=\"\$HOME/.local/bin:\$PATH\""
 append_once "$RC" "sc self profile" "eval \"\$(sc self profile)\""
 
 
-log::success "Done. Reload your shell: source $RCL"
+log::success "Done. Reload your shell: source $RC"

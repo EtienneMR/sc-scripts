@@ -9,4 +9,4 @@ git fetch
 git reset --hard origin/HEAD
 
 log::info "Running install script"
-exec python -m "$SC" self install
+exec "$SC" self install
