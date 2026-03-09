@@ -26,7 +26,9 @@ ln --symbolic --force "$SC" "$LOCAL_BIN/sc"
 RC=$(rc_file)
 log::info "Updating $RC"
 
-append_once "$RC" ".local/bin" "export PATH=\"\$HOME/.local/bin:\$PATH\""
-append_once "$RC" "sc self profile" "eval \"\$(sc self profile)\""
+"$SC" utils append "$RC" "# SC INSTALL" <<EOF
+export PATH="\$HOME/.local/bin:\$PATH"
+eval "$(sc self profile)"
+EOF
 
 log::success "Done. Reload your shell: source $RC"
