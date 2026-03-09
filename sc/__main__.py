@@ -13,7 +13,7 @@ if __package__ is None:
     runpy.run_module("sc", run_name="__main__")
     sys.exit(1)
 
-from . import main
+from ._cli import main
 
 
 try:

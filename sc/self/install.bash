@@ -1,20 +1,21 @@
-source "$("$SC" libs bash)"
+source "$SC_LIBS"
 core::init
 
-
 rc_file() {
-  case "$(sc utils detect_shell)" in
-    zsh)  printf '%s/.zshrc'                   "$HOME" ;;
-    bash) printf '%s/.bashrc'                  "$HOME" ;;
-    ksh)  printf '%s/.kshrc'                   "$HOME" ;;
+  case "$(process::detect_shell)" in
+    zsh) printf '%s/.zshrc' "$HOME" ;;
+    bash) printf '%s/.bashrc' "$HOME" ;;
+    ksh) printf '%s/.kshrc' "$HOME" ;;
     fish) printf '%s/.config/fish/config.fish' "$HOME" ;;
-    *)    printf '%s/.profile'                 "$HOME" ;;  # POSIX fallback
+    *) printf '%s/.profile' "$HOME" ;; # POSIX fallback
   esac
 }
 
 append_once() {
-  file="$1"; marker="$2"; content="$3"
-  grep -qF "$marker" "$file" 2>/dev/null || printf '\n%s\n' "$content" >> "$file"
+  file="$1"
+  marker="$2"
+  content="$3"
+  grep -qF "$marker" "$file" 2>/dev/null || printf '\n%s\n' "$content" >>"$file"
 }
 
 LOCAL_BIN="$HOME/.local/bin"
@@ -27,6 +28,5 @@ log::info "Updating $RC"
 
 append_once "$RC" ".local/bin" "export PATH=\"\$HOME/.local/bin:\$PATH\""
 append_once "$RC" "sc self profile" "eval \"\$(sc self profile)\""
-
 
 log::success "Done. Reload your shell: source $RC"

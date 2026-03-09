@@ -1,4 +1,4 @@
-source "$("$SC" libs bash)"
+source "$SC_LIBS"
 core::init
 process::require "git"
 
