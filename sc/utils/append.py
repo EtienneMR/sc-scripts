@@ -22,7 +22,7 @@ def append(file: str, marker: str, content: str) -> None:
     """
     path = Path(file).expanduser()
     start_marker = f"{marker} START"
-    end_marker   = f"{marker} END"
+    end_marker = f"{marker} END"
     block = f"{start_marker}\n{content}\n{end_marker}\n" if content else ""
 
     if path.exists():
@@ -34,11 +34,11 @@ def append(file: str, marker: str, content: str) -> None:
         original = ""
 
     start = original.find(start_marker)
-    end   = original.find(end_marker)
+    end = original.find(end_marker)
 
     if start != -1 and end != -1 and start < end:
         # Replace existing block, preserving everything outside it
-        new_text = original[:start] + block + original[end + len(end_marker) + 1:]
+        new_text = original[:start] + block + original[end + len(end_marker) + 1 :]
     else:
         # Append — ensure a single blank line separator
         new_text = original.rstrip("\n") + ("\n\n" if original else "") + block

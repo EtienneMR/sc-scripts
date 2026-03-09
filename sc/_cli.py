@@ -1,3 +1,4 @@
+import signal
 from importlib import import_module
 import os, sys, subprocess
 from pathlib import Path
@@ -51,21 +52,24 @@ def completions(tokens: list, tree: dict) -> list:
 
 def run(script: Path, args: list) -> int:
     cmd = [
-        *([interpreter] if (interpreter := INTERPRETERS.get(script.suffix.lower())) else []),
+        *(
+            [interpreter]
+            if (interpreter := INTERPRETERS.get(script.suffix.lower()))
+            else []
+        ),
         script.as_posix(),
-        *args
+        *args,
     ]
+    env = {
+        **os.environ,
+        "SC":        CLI_MAIN.as_posix(),
+        "SC_ROOT":   CLI_MAIN.parent.parent.as_posix(),
+        "SC_SCRIPT": script.stem,
+        "SC_LIBS":   CLI_LIBS.as_posix(),
+    }
     try:
-        return subprocess.run(
-            cmd,
-            env={
-                **os.environ,
-                "SC": CLI_MAIN.as_posix(),
-                "SC_ROOT": CLI_MAIN.parent.parent.as_posix(),
-                "SC_SCRIPT": script.stem,
-                "SC_LIBS": CLI_LIBS.as_posix(),
-            },
-        ).returncode
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+        os.execvpe(cmd[0], cmd, env)
     except FileNotFoundError:
         sys.exit(f"error: interpreter not found for {script.name}")
 

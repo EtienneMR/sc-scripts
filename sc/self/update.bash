@@ -4,9 +4,9 @@ process::require "git"
 
 cd "$SC_ROOT"
 
-log::info "Updating repository"
+log::info "updating repository"
 git fetch
 git reset --hard origin/HEAD
 
-log::info "Running install script"
+log::info "running install script"
 exec "$SC" self install

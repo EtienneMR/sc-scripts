@@ -4,7 +4,7 @@ temp::dir() {
   local d
   d="$(mktemp -d --suffix=.sc)"
   _TEMP_DIRS+=("$d")
-  log::debug "Created temp dir $d"
+  log::debug "created temp dir $d"
   printf -v "$1" '%s' "$d"
 }
 
@@ -12,13 +12,13 @@ temp::file() {
   local d
   d="$(mktemp --suffix=.sc)"
   _TEMP_DIRS+=("$d")
-  log::debug "Created temp file $d"
+  log::debug "created temp file $d"
   printf -v "$1" '%s' "$d"
 }
 
 temp::cleanup() {
   for d in "${_TEMP_DIRS[@]:-}"; do
-    [ -e "$d" ] && log::debug "Removing temp dir $d" && rm -rf "$d"
+    [ -e "$d" ] && log::debug "removing temp dir $d" && rm -rf "$d"
   done
   _TEMP_DIRS=()
 }

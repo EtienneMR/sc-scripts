@@ -1,6 +1,7 @@
 source "$SC_LIBS"
 core::init
 process::require "clang++"
+process::require_args "$#" 1 1 "usage: sc cpp-loop <file>"
 
 DIR=""
 temp::dir DIR
