@@ -4,9 +4,6 @@ process::require_args "$#" 0 0 "usage: sc web-codium"
 temp::dir LOGS_DIR
 state::dir STATE_DIR
 
-process::random_port "PORT"
-TOKEN="$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
-
 _codium_arch() {
   case "$(uname -m)" in
     x86_64) echo "x64" ;;
@@ -28,6 +25,9 @@ _install_codium() {
 }
 
 github::ensure "codium" "VSCodium/vscodium" "$STATE_DIR/codium.version" _install_codium
+
+process::random_port "PORT"
+TOKEN="$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
 
 "$STATE_DIR/codium/bin/codium-server" --port "$PORT" --connection-token "$TOKEN" >"$LOGS_DIR/codium.log" 2>&1 &
 codium_pid=$!

@@ -59,6 +59,7 @@ _process::port_in_use() {
     nc -z localhost "$port" 2>/dev/null
   else
     log::warn "could not check port usage: process::random_port requires ss or nc to check port usage"
+    return 1
   fi
 }
 
