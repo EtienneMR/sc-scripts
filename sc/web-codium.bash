@@ -1,7 +1,6 @@
 source "$SC_LIBS"
 core::init
 process::require_args "$#" 0 0 "usage: sc web-codium"
-temp::dir LOGS_DIR
 state::dir STATE_DIR
 
 _codium_arch() {
@@ -29,7 +28,13 @@ github::ensure "codium" "VSCodium/vscodium" "$STATE_DIR/codium.version" _install
 process::random_port "PORT"
 TOKEN="$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
 
-"$STATE_DIR/codium/bin/codium-server" --port "$PORT" --connection-token "$TOKEN" >"$LOGS_DIR/codium.log" 2>&1 &
+"$STATE_DIR/codium/bin/codium-server" \
+  --port "$PORT"\
+  --connection-token "$TOKEN" \
+  --server-data-dir "$STATE_DIR/server-data" \
+  --user-data-dir "$STATE_DIR/user-data" \
+  --extensions-dir "$STATE_DIR/extensions" \
+  >/dev/null 2>&1 &
 codium_pid=$!
 
 "$SC" tunnel "$PORT" "?tkn=$TOKEN&folder=$(pwd -P)" &
