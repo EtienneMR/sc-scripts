@@ -2,14 +2,7 @@ HTTP_CLIENT=""
 
 _http::ensure_client() {
   [ -n "$HTTP_CLIENT" ] && return
-
-  if process::exists curl; then
-    HTTP_CLIENT="curl"
-  elif process::exists wget; then
-    HTTP_CLIENT="wget"
-  else
-    log::die "error: neither curl nor wget is available"
-  fi
+  process::require HTTP_CLIENT "curl" "wget"
 }
 
 http::get() {
@@ -17,13 +10,13 @@ http::get() {
 
   _http::ensure_client
 
-  log::debug "fetching $url using $HTTP_CLIENT"
+  log::debug "fetching $url"
   case "$HTTP_CLIENT" in
     curl)
-      curl -fsSL "$url"
+      curl -fSL "$url"
       ;;
     wget)
-      wget -qO- "$url"
+      wget -O- "$url"
       ;;
   esac
 }
@@ -34,13 +27,13 @@ http::download() {
 
   _http::ensure_client
 
-  log::debug "downloading $url to $out using $HTTP_CLIENT"
+  log::debug "downloading $url to $out"
   case "$HTTP_CLIENT" in
     curl)
-      curl -fsSL# "$url" -o "$out"
+      curl -fSL# "$url" -o "$out"
       ;;
     wget)
-      wget -qO --progress "$out" "$url"
+      wget -O --progress "$out" "$url"
       ;;
   esac
 }

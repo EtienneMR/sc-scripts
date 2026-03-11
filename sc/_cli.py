@@ -62,10 +62,10 @@ def run(script: Path, args: list) -> int:
     ]
     env = {
         **os.environ,
-        "SC":        CLI_MAIN.as_posix(),
-        "SC_ROOT":   CLI_MAIN.parent.parent.as_posix(),
+        "SC": CLI_MAIN.as_posix(),
+        "SC_ROOT": CLI_MAIN.parent.parent.as_posix(),
         "SC_SCRIPT": script.stem,
-        "SC_LIBS":   CLI_LIBS.as_posix(),
+        "SC_LIBS": CLI_LIBS.as_posix(),
     }
     try:
         signal.signal(signal.SIGINT, signal.SIG_DFL)

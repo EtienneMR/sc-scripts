@@ -1,12 +1,12 @@
 source "$SC_LIBS"
 core::init
-process::require "git"
+process::require GIT "git"
 
 cd "$SC_ROOT"
 
 log::info "updating repository"
-git fetch
-git reset --hard origin/HEAD
+"$GIT" fetch
+"$GIT" reset --hard origin/HEAD
 
 log::info "running install script"
 exec "$SC" self install

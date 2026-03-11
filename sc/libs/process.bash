@@ -3,9 +3,16 @@ process::exists() {
 }
 
 process::require() {
+  local _var="$1"
+  shift
   for cmd in "$@"; do
-    process::exists "$cmd" || log::die "missing dependency: $cmd"
+    if process::exists "$cmd"; then
+      log::debug "using $cmd"
+      printf -v "$_var" "%s" "$cmd"
+      return
+    fi
   done
+  log::die "missing dependency: $@"
 }
 
 process::detect_shell() {
