@@ -12,7 +12,7 @@ process::require() {
       return
     fi
   done
-  log::die "missing dependency: $@"
+  log::die "Missing dependency: $@"
 }
 
 process::detect_shell() {
@@ -48,7 +48,7 @@ process::random_port() {
     log::debug "port $_port in use, retrying"
   done
 
-  log::die "could not find a free port after 10 attempts"
+  log::die "Could not find a free port after 10 attempts"
 }
 
 _process::port_in_use() {
@@ -58,7 +58,7 @@ _process::port_in_use() {
   elif process::exists nc; then
     nc -z localhost "$port" 2>/dev/null
   else
-    log::warn "could not check port usage: process::random_port requires ss or nc to check port usage"
+    log::warn "Could not check port usage: process::random_port requires ss or nc to check port usage"
     return 1
   fi
 }
@@ -73,7 +73,7 @@ process::wait_output() {
 
   while [ -z "$match" ]; do
     if [ "$elapsed" -ge "$timeout" ]; then
-      log::die "timed out after ${elapsed}s waiting for pattern in $file"
+      log::die "Timed out after ${elapsed}s waiting for pattern in $file"
     fi
     sleep 1
     elapsed=$((elapsed + 1))

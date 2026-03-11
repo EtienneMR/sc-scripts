@@ -31,4 +31,4 @@ export PATH="\$HOME/.local/bin:\$PATH"
 $(sc self profile)
 EOF
 
-log::success "done. reload your shell: source $RC"
+log::success "Done. Reload your shell: source $RC"

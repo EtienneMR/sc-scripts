@@ -38,7 +38,6 @@ def cpp_deps(entry: Path) -> list:
             if sibling.exists() and sibling not in visited:
                 visited.add(sibling)
                 deps.append(sibling)
-                queue.append(sibling)  # recurse: sibling may include more headers
             # Traverse the header itself for transitive includes
             queue.append(header)
 

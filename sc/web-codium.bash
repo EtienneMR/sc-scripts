@@ -8,7 +8,7 @@ _codium_arch() {
     x86_64) echo "x64" ;;
     aarch64) echo "arm64" ;;
     armv7l) echo "armhf" ;;
-    *) log::die "unsupported architecture for codium: $(uname -m)" ;;
+    *) log::die "Unsupported architecture for codium: $(uname -m)" ;;
   esac
 }
 
@@ -29,7 +29,7 @@ process::random_port "PORT"
 TOKEN="$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
 
 "$STATE_DIR/codium/bin/codium-server" \
-  --port "$PORT"\
+  --port "$PORT" \
   --connection-token "$TOKEN" \
   --server-data-dir "$STATE_DIR/server-data" \
   --user-data-dir "$STATE_DIR/user-data" \

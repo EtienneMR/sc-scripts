@@ -6,7 +6,7 @@ FILE="$(realpath "$1")"
 temp::file OUT
 
 while :; do
-  log::info running... | log::trim
+  log::info "Running..." | log::trim
   "$SC" cpp run "$FILE" >"$OUT" 2>&1
   clear
   cat "$OUT"

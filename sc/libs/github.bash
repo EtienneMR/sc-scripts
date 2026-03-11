@@ -1,5 +1,5 @@
 github::latest() {
-  "$SC" utils github-latest "$1" || log::die "could not fetch latest release for $1"
+  "$SC" utils github-latest "$1" || log::die "Could not fetch latest release for $1"
 }
 
 github::ensure() {
@@ -20,9 +20,9 @@ github::ensure() {
   fi
 
   if [ -z "$installed" ]; then
-    log::info "installing $name $latest"
+    log::info "Installing $name $latest"
   else
-    log::info "updating $name $installed → $latest"
+    log::info "Updating $name $installed → $latest"
   fi
 
   "$install_fn" "$latest" "$@"

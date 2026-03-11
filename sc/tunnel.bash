@@ -12,7 +12,7 @@ _cloudflared_arch() {
     aarch64) echo "arm64" ;;
     armv7l | armv6l) echo "arm" ;;
     i386 | i686) echo "386" ;;
-    *) log::die "unsupported architecture for cloudflared: $(uname -m)" ;;
+    *) log::die "Unsupported architecture for cloudflared: $(uname -m)" ;;
   esac
 }
 
@@ -28,9 +28,9 @@ temp::dir LOGS_DIR
 "$STATE_DIR/cloudflared" tunnel --url "http://localhost:$TUNNEL_PORT" >"$LOGS_DIR/cloudflared.log" 2>&1 &
 tunnel_pid=$!
 
-log::info "waiting for tunnel"
+log::info "Waiting for tunnel"
 process::wait_output "$LOGS_DIR/cloudflared.log" "https://[A-Za-z0-9._-]+\.trycloudflare\.com" HOST
 
-log::success "tunnel ready at: $HOST$TUNNEL_PATH"
+log::success "Tunnel ready at: $HOST$TUNNEL_PATH"
 
 wait $tunnel_pid

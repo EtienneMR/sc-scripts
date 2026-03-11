@@ -1,4 +1,4 @@
-if [[ -t 1 && "${NO_COLOR:-}" != "1" ]]; then
+if [[ -t 1 && ${NO_COLOR:-} != "1" ]]; then
   LOG_COLOR=1
 else
   LOG_COLOR=0
@@ -20,11 +20,11 @@ else
   C_GRAY=""
 fi
 
-log::info() { printf "${C_BLUE}ℹ ${C_RESET} %s\n" "$*"; }
-log::success() { printf "${C_GREEN}✔ ${C_RESET} %s\n" "$*"; }
-log::warn() { printf "${C_YELLOW}⚠ ${C_RESET} %s\n" "$*" >&2; }
-log::error() { printf "${C_RED}✖ ${C_RESET} %s\n" "$*" >&2; }
-log::debug() { [[ "${LOG_DEBUG:-0}" = "1" ]] && printf "${C_GRAY}🐛 ${C_RESET} %s\n" "$*" || true; }
+log::info() { printf "${C_BLUE}ℹ${C_RESET} %s\n" "$*"; }
+log::success() { printf "${C_GREEN}✔${C_RESET} %s\n" "$*"; }
+log::warn() { printf "${C_YELLOW}⚠${C_RESET} %s\n" "$*" >&2; }
+log::error() { printf "${C_RED}✖${C_RESET} %s\n" "$*" >&2; }
+log::debug() { [[ ${LOG_DEBUG:-0} == "1" ]] && printf "${C_GRAY}🐛${C_RESET} %s\n" "$*" || true; }
 log::die() {
   log::error "$@"
   exit 1

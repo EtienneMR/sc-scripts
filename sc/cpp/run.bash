@@ -10,10 +10,10 @@ COMPILE_COMMAND="$COMPILER -Wall -Wextra -fcolor-diagnostics"
 temp::file BIN
 
 log::debug "Resolving dependencies for $FILE"
-mapfile -t DEPS < <("$SC" utils cpp-deps "$FILE") || log::die "dependency resolution failed"
+mapfile -t DEPS < <("$SC" utils cpp-deps "$FILE") || log::die "Dependency resolution failed"
 log::debug "Dependencies: ${DEPS[*]}"
 
-$COMPILE_COMMAND "${DEPS[@]}" "$FILE" -o "$BIN" >&2 || log::die "compilation failed"
+$COMPILE_COMMAND "${DEPS[@]}" "$FILE" -o "$BIN" >&2 || log::die "Compilation failed"
 
 RIN="$([ -f "$IN" ] && echo "$IN" || echo "/dev/null")"
 "$BIN" <"$RIN"

@@ -51,5 +51,5 @@ case "$(process::detect_shell)" in
   bash) _profile::bash ;;
   zsh) _profile::zsh ;;
   fish) _profile::fish ;;
-  *) log::warn "unrecognized shell: completion not installed" ;;
+  *) log::warn "Unrecognized shell: completion not installed" ;;
 esac
