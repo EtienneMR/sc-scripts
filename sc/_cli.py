@@ -1,6 +1,6 @@
 import signal
-from importlib import import_module
-import os, sys, subprocess
+import os
+import sys
 from pathlib import Path
 
 CLI_MAIN = Path(__file__).with_stem("__main__").resolve()

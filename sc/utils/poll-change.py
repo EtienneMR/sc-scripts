@@ -1,4 +1,6 @@
-import sys, os, time
+import sys
+import os
+import time
 
 if __name__ == "__main__":
     file = sys.argv[1]

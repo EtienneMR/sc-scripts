@@ -3,7 +3,6 @@
 import sys
 
 if __package__ is None:
-    import os
     import runpy
     from pathlib import Path
 

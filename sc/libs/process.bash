@@ -88,3 +88,25 @@ process::wait_any_pid() {
   kill "$@" 2>/dev/null || true
   wait "$@" 2>/dev/null || true
 }
+
+process::py_run() {
+  if process::exists "$1"; then
+    "$@"
+  elif process::exists uvx; then
+    uvx "$@"
+  elif process::exists pipx; then
+    pipx run "$@"
+  else return 1; fi
+}
+
+process::js_run() {
+  if process::exists "$1"; then
+    "$@"
+  elif process::exists pnpx; then
+    pnpx "$@"
+  elif process::exists bunx; then
+    bunx "$@"
+  elif process::exists npx; then
+    npx --yes "$@"
+  else return 1; fi
+}
