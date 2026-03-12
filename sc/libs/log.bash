@@ -1,4 +1,6 @@
-if [[ -t 1 && ${NO_COLOR:-} != "1" ]]; then
+if [ "${NO_COLOR:-}" = "1" ]; then
+  LOG_COLOR=0
+elif [ "${KEEP_COLOR:-}" = "1" ] || [ -t 1 ]; then
   LOG_COLOR=1
 else
   LOG_COLOR=0
@@ -29,4 +31,11 @@ log::die() {
   log::error "$@"
   exit 1
 }
-log::trim() { tr -d "\n"; }
+log::overwrite() {
+  if ((LOG_COLOR)); then
+    printf "\r\033[K"
+    tr -d "\n"
+  else
+    cat
+  fi
+}

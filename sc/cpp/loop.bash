@@ -6,10 +6,10 @@ FILE="$(realpath "$1")"
 temp::file OUT
 
 while :; do
-  log::info "Running..." | log::trim
-  "$SC" cpp run "$FILE" >"$OUT" 2>&1
+  KEEP_COLOR=$LOG_COLOR "$SC" cpp run "$FILE" 3>&1 >"$OUT" 2>&1 || true
   clear
   cat "$OUT"
   echo
+  log::debug "Polling for changes"
   "$SC" utils poll-change "$FILE"
 done
