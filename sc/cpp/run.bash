@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
 process::require COMPILER "clang++" "g++"
-process::require_args "$#" 1 1 "usage: sc cpp run <file.cpp>"
+process::require_args "$#" 1 1 "Usage: sc cpp run <file.cpp>"
 
 log::debug "Opening fd 3"
 2>/dev/null >&3 || exec 3>&1

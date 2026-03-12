@@ -1,6 +1,6 @@
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 1 2 "usage: sc tunnel <port> [path]"
+process::require_args "$#" 1 2 "Usage: sc tunnel <port> [path]"
 state::dir STATE_DIR
 
 TUNNEL_PORT="$1"

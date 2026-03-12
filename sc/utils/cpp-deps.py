@@ -46,7 +46,7 @@ def cpp_deps(entry: Path) -> list:
 
 def main():
     if len(sys.argv) != 2:
-        print("usage: cpp-deps.py <file.cpp>", file=sys.stderr)
+        print("Usage: cpp-deps.py <file.cpp>", file=sys.stderr)
         sys.exit(1)
 
     entry = Path(sys.argv[1])

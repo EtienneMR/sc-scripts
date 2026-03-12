@@ -27,7 +27,7 @@ http::download() {
 
   _http::ensure_client
 
-  log::debug "downloading $url to $out"
+  log::debug "Downloading $url to $out"
   case "$HTTP_CLIENT" in
     curl)
       curl -fSL# "$url" -o "$out"

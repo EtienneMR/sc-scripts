@@ -7,7 +7,7 @@ process::require() {
   shift
   for cmd in "$@"; do
     if process::exists "$cmd"; then
-      log::debug "using $cmd"
+      log::debug "Using $cmd"
       printf -v "$_var" "%s" "$cmd"
       return
     fi
@@ -40,12 +40,12 @@ process::random_port() {
   while [ $_attempts -lt 10 ]; do
     _port=$((1025 + RANDOM % (65535 - 1025 + 1)))
     if ! _process::port_in_use "$_port"; then
-      log::debug "found free random port $_port"
+      log::debug "Found free random port $_port"
       printf -v "$_var" '%s' "$_port"
       return 0
     fi
     _attempts=$((_attempts + 1))
-    log::debug "port $_port in use, retrying"
+    log::debug "Port $_port in use, retrying"
   done
 
   log::die "Could not find a free port after 10 attempts"

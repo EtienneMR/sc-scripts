@@ -66,7 +66,7 @@ if __name__ == "__main__":
     elif len(sys.argv) == 3:
         content = sys.stdin.read().removesuffix("\n")
     else:
-        print("usage: append.py <file> <marker> [content]", file=sys.stderr)
+        print("Usage: append.py <file> <marker> [content]", file=sys.stderr)
         print("       content may also be piped via stdin", file=sys.stderr)
         sys.exit(1)
     append(sys.argv[1], sys.argv[2], content)

@@ -3,11 +3,11 @@ LIB_DIR="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 core::init() {
   set -euo pipefail
   trap core::_exit EXIT INT TERM
-  log::debug "initied core"
+  log::debug "Initied core"
 }
 
 core::_exit() {
-  log::debug "exiting script"
+  log::debug "Exiting script"
   temp::cleanup
   lock::release
 }

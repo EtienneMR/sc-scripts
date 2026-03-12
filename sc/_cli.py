@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 CLI_MAIN = Path(__file__).with_stem("__main__").resolve()
-CLI_LIBS = CLI_MAIN.parent / "libs" / "core.bash"
+CLI_LIBS = CLI_MAIN.parent / "_libs" / "core.bash"
 INTERPRETERS = {
     ".py": sys.executable,
     ".bash": "bash",

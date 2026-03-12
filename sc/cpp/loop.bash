@@ -1,6 +1,6 @@
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 1 1 "usage: sc cpp loop <file.cpp>"
+process::require_args "$#" 1 1 "Usage: sc cpp loop <file.cpp>"
 
 FILE="$(realpath "$1")"
 temp::file OUT

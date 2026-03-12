@@ -1,6 +1,6 @@
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 0 0 "usage: sc web-codium"
+process::require_args "$#" 0 0 "Usage: sc web-codium"
 state::dir STATE_DIR
 
 _codium_arch() {
