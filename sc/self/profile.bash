@@ -47,6 +47,29 @@ complete -c sc -f -a '(__fish_sc_complete)'
 EOF
 }
 
+_profile::aliases() {
+  local script line name sc_cmd
+  while IFS= read -r script; do          # for each script
+    while IFS= read -r line; do          # read lines
+      [[ "$line" == \#* ]] || break      # stop at first non-comment
+      [[ "$line" =~ ^#\ sc:alias\ ([^[:space:]]+) ]] || continue
+      name="${BASH_REMATCH[1]}"
+      sc_cmd="$(realpath --relative-to="$SC_ROOT/sc" "$script" | sed 's/\.[^.]*$//' | tr '/' ' ')"
+      echo "alias $name='sc $sc_cmd'"
+    done < "$script"
+  done < <(find "$SC_ROOT/sc" -type f \( -name "*.bash" -o -name "*.py" \) | sort)
+}
+
+_profile::custom-aliases() {
+  cat <<'EOF'
+mkcd() { mkdir -p "$@" && cd "$_"; }
+mkt() { cd "$(mktemp -d)" && pwd; }
+cdl() { cd "$1" && ls -l; }
+EOF
+}
+
+_profile::aliases
+_profile::custom-aliases
 case "$(process::detect_shell)" in
   bash) _profile::bash ;;
   zsh) _profile::zsh ;;
