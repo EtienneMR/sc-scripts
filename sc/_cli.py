@@ -1,5 +1,5 @@
-import signal
 import os
+import signal
 import sys
 from pathlib import Path
 
@@ -64,7 +64,6 @@ def run(script: Path, args: list) -> int:
         **os.environ,
         "SC": CLI_MAIN.as_posix(),
         "SC_ROOT": CLI_MAIN.parent.parent.as_posix(),
-        "SC_SCRIPT": script.stem,
         "SC_LIBS": CLI_LIBS.as_posix(),
     }
     try:

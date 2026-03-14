@@ -49,14 +49,14 @@ EOF
 
 _profile::aliases() {
   local script line name sc_cmd
-  while IFS= read -r script; do          # for each script
-    while IFS= read -r line; do          # read lines
-      [[ "$line" == \#* ]] || break      # stop at first non-comment
-      [[ "$line" =~ ^#\ sc:alias\ ([^[:space:]]+) ]] || continue
+  while IFS= read -r script; do   # for each script
+    while IFS= read -r line; do   # read lines
+      [[ $line == \#* ]] || break # stop at first non-comment
+      [[ $line =~ ^#\ sc:alias\ ([^[:space:]]+) ]] || continue
       name="${BASH_REMATCH[1]}"
       sc_cmd="$(realpath --relative-to="$SC_ROOT/sc" "$script" | sed 's/\.[^.]*$//' | tr '/' ' ')"
       echo "alias $name='sc $sc_cmd'"
-    done < "$script"
+    done <"$script"
   done < <(find "$SC_ROOT/sc" -type f \( -name "*.bash" -o -name "*.py" \) | sort)
 }
 
@@ -76,3 +76,5 @@ case "$(process::detect_shell)" in
   fish) _profile::fish ;;
   *) log::warn "Unrecognized shell: completion not installed" ;;
 esac
+
+echo "sc system status -q"

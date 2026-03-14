@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
 process::require_args "$#" 0 0 "Usage: sc web-codium"
-state::dir STATE_DIR
+state::dir "web-codium" STATE_DIR
 
 _codium_arch() {
   case "$(uname -m)" in

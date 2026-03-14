@@ -9,7 +9,6 @@ core::init() {
 core::_exit() {
   log::debug "Exiting script"
   temp::cleanup
-  lock::release
 }
 
 for lib in "$LIB_DIR"/*.bash; do
