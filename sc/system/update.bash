@@ -20,20 +20,8 @@ _pacman() {
   fi
 }
 
-_reboot_required() {
-  [ -f /run/reboot-required ] && return 0
-
-  if process::exists pacman; then
-    local installed running
-    installed="$(pacman -Q linux 2>/dev/null | awk '{print $2}')"
-    running="$(uname -r)"
-    [ -n "$installed" ] && [[ $running != "$installed"* ]] && return 0
-  fi
-  return 1
-}
-
 _prompt_reboot() {
-  _reboot_required || return 0
+  system::reboot_required || return 0
   log::warn "Reboot required"
   local reply
   read -r -p "Reboot now? [y/N] " reply </dev/tty
