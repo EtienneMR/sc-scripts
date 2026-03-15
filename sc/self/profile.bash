@@ -60,21 +60,10 @@ _profile::aliases() {
   done < <(find "$SC_ROOT/sc" -type f \( -name "*.bash" -o -name "*.py" \) | sort)
 }
 
-_profile::custom-aliases() {
-  cat <<'EOF'
-mkcd() { mkdir -p "$@" && cd "$_"; }
-mkt() { cd "$(mktemp -d)" && pwd; }
-cdl() { cd "$1" && ls -l; }
-EOF
-}
-
 _profile::aliases
-_profile::custom-aliases
 case "$(process::detect_shell)" in
   bash) _profile::bash ;;
   zsh) _profile::zsh ;;
   fish) _profile::fish ;;
   *) log::warn "Unrecognized shell: completion not installed" ;;
 esac
-
-echo "sc system status -q"

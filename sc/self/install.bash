@@ -28,7 +28,11 @@ log::info "Updating $RC"
 
 "$SC" utils append "$RC" "# SC INSTALL" <<EOF
 export PATH="\$HOME/.local/bin:\$PATH"
-$(sc self profile)
+$("$SC" self profile)
+EOF
+
+"$SC" utils append "$RC" "# SC SYSTEM PROFILE" <<EOF
+$("$SC" system profile)
 EOF
 
 log::success "Done. Reload your shell: source $RC"
