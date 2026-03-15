@@ -7,6 +7,15 @@ EXCLUDE_NAMES=(
   build
 )
 
+fs::link() {
+  local source="$1"
+  local target="$2"
+  local relative="$(realpath --relative-to="$(dirname "$target")" "$source")"
+
+  log::debug "Linking $source to $target"
+  ln -sfn "$relative" "$target"
+}
+
 fs::each_ext() {
   local action="$1"
   local prefix="$2"

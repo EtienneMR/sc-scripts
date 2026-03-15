@@ -21,7 +21,7 @@ append_once() {
 LOCAL_BIN="$HOME/.local/bin"
 log::info "Adding sc to $LOCAL_BIN"
 mkdir -p "$LOCAL_BIN"
-ln --symbolic --force "$SC" "$LOCAL_BIN/sc"
+fs::link "$SC" "$LOCAL_BIN/sc"
 
 RC=$(rc_file)
 log::info "Updating $RC"

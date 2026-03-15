@@ -17,5 +17,5 @@ mkdir -p "$PROJECTS_DIR"
 dir="$PROJECTS_DIR/$NAME"
 [ -d "$dir" ] && log::die "Project already exists: $NAME"
 
-ln -s "$TARGET" "$dir"
+fs::link "$TARGET" "$dir"
 log::success "Added $TARGET to project list"
