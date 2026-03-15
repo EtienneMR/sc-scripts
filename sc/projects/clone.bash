@@ -10,16 +10,16 @@ NAME="${2:-$(basename "$URL" .git)}"
 dir="$PROJECTS_DIR/$NAME"
 
 if process::exists ssh; then
-    BASE="git@github.com:"
+  BASE="git@github.com:"
 else
-    BASE="https://github.com/"
+  BASE="https://github.com/"
 fi
 
 [ -d "$dir" ] && log::die "project already exists: $NAME"
 
-case "${URL//[^\/]}" in
-    "") URL="${BASE}EtienneMR/$URL" ;;
-    "/") URL="${BASE}$URL" ;;
+case "${URL//[^\/]/}" in
+  "") URL="${BASE}EtienneMR/$URL" ;;
+  "/") URL="${BASE}$URL" ;;
 esac
 
 log::info "Cloning $URL to $dir"

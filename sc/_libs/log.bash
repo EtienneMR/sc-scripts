@@ -32,10 +32,10 @@ log::die() {
   exit 1
 }
 log::column() {
-    local width="$1" str="$2"
-    local plain; plain="$(printf '%s' "$str" | sed 's/\x1b\[[0-9;]*m//g')"
-    local pad=$(( width - ${#plain} ))
-    printf '%s%*s' "$str" "$pad" ""
+  local width="$1" str="$2"
+  local plain="$(printf '%s' "$str" | sed 's/\x1b\[[0-9;]*m//g')"
+  local pad=$((width - ${#plain}))
+  printf '%s%*s' "$str" "$pad" ""
 }
 log::overwrite() {
   if ((LOG_COLOR)); then

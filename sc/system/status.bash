@@ -32,7 +32,7 @@ _full_update() {
 
 _package_update() {
   if [ "$QUIET" -eq 0 ] && process::exists checkupdates; then
-    if checkupdates > /dev/null; then
+    if checkupdates >/dev/null; then
       log::info "Package updates available"
     else
       log::success "All packages up to date"
