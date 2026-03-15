@@ -7,8 +7,10 @@ log::debug "Opening fd 3"
 2>/dev/null >&3 || exec 3>&1
 
 FILE="$(realpath "$1")"
-IN="${FILE%.cpp}.in"
 COMPILE_COMMAND="$COMPILER -Wall -Wextra -fcolor-diagnostics"
+
+IN="${FILE%.cpp}.in"
+[ -f "$IN" ] || IN="/dev/null"
 
 temp::file BIN
 
@@ -21,5 +23,4 @@ log::info "Compiling $((${#DEPS[@]} + 1)) files" | log::overwrite >&3
 $COMPILE_COMMAND "${DEPS[@]}" "$FILE" -o "$BIN" >&2 || log::die "Compilation failed"
 
 log::info "Running entrypoint" | log::overwrite >&3
-RIN="$([ -f "$IN" ] && echo "$IN" || echo "/dev/null")"
-"$BIN" <"$RIN" || log::die "Execution failed (return code $?)"
+"$BIN" <"$IN" || log::die "Execution failed (return code $?)"

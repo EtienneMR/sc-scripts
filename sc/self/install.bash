@@ -11,13 +11,6 @@ rc_file() {
   esac
 }
 
-append_once() {
-  file="$1"
-  marker="$2"
-  content="$3"
-  grep -qF "$marker" "$file" 2>/dev/null || printf '\n%s\n' "$content" >>"$file"
-}
-
 LOCAL_BIN="$HOME/.local/bin"
 log::info "Adding sc to $LOCAL_BIN"
 mkdir -p "$LOCAL_BIN"

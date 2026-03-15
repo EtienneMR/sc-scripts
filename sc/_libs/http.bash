@@ -10,7 +10,7 @@ http::get() {
 
   _http::ensure_client
 
-  log::debug "fetching $url"
+  log::debug "Fetching $url"
   case "$HTTP_CLIENT" in
     curl)
       curl -fSL "$url"

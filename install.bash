@@ -2,16 +2,16 @@
 # Install sc on a fresh machine.
 #
 # Usage:
-#   curl -fL https://raw.githubusercontent.com/EtienneMR/sc-scripts/main/install.sh | bash
+#   curl -fL https://raw.githubusercontent.com/EtienneMR/sc-scripts/main/install.bash | bash
 #
 set -euo pipefail
 
 REPO="https://github.com/EtienneMR/sc-scripts"
 DEST="$HOME/.local/apps/sc-scripts"
 
-_info() { printf '\033[34mℹ\033[0m  %s\n' "$*"; }
+_info() { printf '\033[34mℹ\033[0m %s\n' "$*"; }
 _die() {
-  printf '\033[31m✖\033[0m  %s\n' "$*" >&2
+  printf '\033[31m✖\033[0m %s\n' "$*" >&2
   exit 1
 }
 

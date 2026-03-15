@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
 process::require git
-process::require_args "$#" 1 2 "usage: sc projects clone <url> [name]"
+process::require_args "$#" 1 2 "Usage: sc projects clone <url> [name]"
 
 mkdir -p "$PROJECTS_DIR"
 
@@ -15,7 +15,7 @@ else
   BASE="https://github.com/"
 fi
 
-[ -d "$dir" ] && log::die "project already exists: $NAME"
+[ -d "$dir" ] && log::die "Project already exists: $NAME"
 
 case "${URL//[^\/]/}" in
   "") URL="${BASE}EtienneMR/$URL" ;;

@@ -1,4 +1,4 @@
-EXCLUDE_NAMES=(
+FS_EXCLUDE_NAMES=(
   ".*"
   node_modules
   __pycache__
@@ -16,10 +16,9 @@ fs::link() {
   ln -sfn "$relative" "$target"
 }
 
-fs::each_ext() {
-  local action="$1"
-  local prefix="$2"
-  shift 2
+fs::all_files() {
+  local _var="$1"
+  shift
   local roots=("${@:-.}")
 
   local exclude=()
@@ -27,8 +26,19 @@ fs::each_ext() {
     exclude+=(-not -path "*/$_name/*")
   done
 
-  local all_files extensions
-  mapfile -t all_files < <(find "${roots[@]}" "${exclude[@]}" -type f | sort)
+  mapfile -t "$_var" < <(find "${roots[@]}" "${exclude[@]}" -type f | sort)
+
+}
+
+fs::each_ext() {
+  local action="$1"
+  local prefix="$2"
+  shift 2
+
+  local all_files
+  fs::all_files all_files "$@"
+
+  local extensions
   mapfile -t extensions < <(printf '%s\n' "${all_files[@]}" | grep -oE '\.[^./]+$' | sort -u | tr -d '.')
 
   for ext in "${extensions[@]}"; do

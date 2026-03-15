@@ -48,16 +48,19 @@ EOF
 }
 
 _profile::aliases() {
-  local script line name sc_cmd
-  while IFS= read -r script; do   # for each script
-    while IFS= read -r line; do   # read lines
-      [[ $line == \#* ]] || break # stop at first non-comment
+  local all_scripts
+  fs::all_files all_scripts "$SC_ROOT/sc"
+
+  local line name sc_cmd
+  for script in "${all_scripts[@]}"; do
+    while IFS= read -r line; do
+      [[ $line == \#* ]] || break
       [[ $line =~ ^#\ sc:alias\ ([^[:space:]]+) ]] || continue
       name="${BASH_REMATCH[1]}"
       sc_cmd="$(realpath --relative-to="$SC_ROOT/sc" "$script" | sed 's/\.[^.]*$//' | tr '/' ' ')"
       echo "alias $name='sc $sc_cmd'"
     done <"$script"
-  done < <(find "$SC_ROOT/sc" -type f \( -name "*.bash" -o -name "*.py" \) | sort)
+  done
 }
 
 _profile::aliases

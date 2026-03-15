@@ -1,6 +1,6 @@
 source "$SC_LIBS"
 core::init
-process::require "git"
+process::require git
 
 log::info "Fetching updates"
 git -C "$SC_ROOT" fetch --quiet
