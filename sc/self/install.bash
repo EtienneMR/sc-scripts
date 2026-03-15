@@ -28,4 +28,23 @@ EOF
 $("$SC" system profile)
 EOF
 
+if process::exists yad; then
+  SERVICE_DIR="$HOME/.config/systemd/user"
+  log::info "Installing tray service"
+  mkdir -p "$SERVICE_DIR"
+  cat > "$SERVICE_DIR/sc-tray.service" <<EOF
+[Unit]
+Description=sc system tray
+
+[Service]
+ExecStart=$SC system tray
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+EOF
+  systemctl --user daemon-reload
+  systemctl --user reenable --now sc-tray
+fi
+
 log::success "Done. Reload your shell: source $RC"

@@ -18,9 +18,9 @@ _full_update() {
   msg="System last updated ${days}d ago"
 
   if [ "$days" -ge 14 ]; then
-    log::error "$msg — run: sc system upgrade"
+    log::error "$msg — run: sc system update"
   elif [ "$days" -ge 7 ]; then
-    log::warn "$msg — run: sc system upgrade"
+    log::warn "$msg — run: sc system update"
   elif [ "$QUIET" -eq 1 ]; then
     :
   elif [ "$days" -ge 2 ]; then
