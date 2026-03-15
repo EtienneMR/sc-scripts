@@ -3,15 +3,19 @@ process::exists() {
 }
 
 process::require() {
-  local _var="$1"
-  shift
-  for cmd in "$@"; do
-    if process::exists "$cmd"; then
-      log::debug "Using $cmd"
-      printf -v "$_var" "%s" "$cmd"
-      return
-    fi
-  done
+  if [ "$#" -gt 1 ]; then
+    local _var="$1"
+    shift
+    for cmd in "$@"; do
+      if process::exists "$cmd"; then
+        log::debug "Using $cmd"
+        printf -v "$_var" "%s" "$cmd"
+        return
+      fi
+    done
+  elif process::exists "$1"; then
+    return
+  fi
   log::die "Missing dependency: $@"
 }
 

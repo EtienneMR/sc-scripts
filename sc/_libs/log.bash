@@ -31,6 +31,12 @@ log::die() {
   log::error "$@"
   exit 1
 }
+log::column() {
+    local width="$1" str="$2"
+    local plain; plain="$(printf '%s' "$str" | sed 's/\x1b\[[0-9;]*m//g')"
+    local pad=$(( width - ${#plain} ))
+    printf '%s%*s' "$str" "$pad" ""
+}
 log::overwrite() {
   if ((LOG_COLOR)); then
     printf "\r\033[K"
