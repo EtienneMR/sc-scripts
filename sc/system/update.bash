@@ -36,15 +36,15 @@ fi
 if process::exists pacman; then
   log::info "Upgrading system packages"
   _pacman -Syu || true
-  orphans="$(_pacman -Qdtq || true)"
-  [ -n "$orphans" ] && echo "$orphans" | _pacman -Rns -
+  mapfile -t orphans < <(_pacman -Qdtq || true)
+  [ "${#orphans[@]}" -gt 0 ] && _pacman -Rns "${orphans[@]}"
 fi
 
 _update flatpak flatpak update --user
 _update flatpak sudo flatpak update --system
 
 _update rustup rustup update
-_update uv uv self update
+_update uv uv tool upgrade --all
 _update pipx pipx upgrade-all
 _update npm npm update -g
 _update pnpm pnpm update -g

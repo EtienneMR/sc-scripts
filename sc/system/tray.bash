@@ -16,7 +16,7 @@ _show() {
 
   GDK_BACKEND=x11 yad --notification \
     --image="$(_status_icon "$output")" \
-    --menu="$output ! quit|Update ! konsole -e sc system update
+    --menu="Refresh ! quit|Update ! konsole -e sc system update
 |Reboot ! konsole -e sudo reboot" \
     --command="menu"
 }
