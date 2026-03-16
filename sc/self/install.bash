@@ -32,7 +32,7 @@ if process::exists yad; then
   SERVICE_DIR="$HOME/.config/systemd/user"
   log::info "Installing tray service"
   mkdir -p "$SERVICE_DIR"
-  cat > "$SERVICE_DIR/sc-tray.service" <<EOF
+  cat >"$SERVICE_DIR/sc-tray.service" <<EOF
 [Unit]
 Description=sc system tray
 
