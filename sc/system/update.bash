@@ -56,7 +56,7 @@ _update journalctl sudo journalctl --vacuum-time=30d
 if process::exists fwupdmgr; then
   log::info "Updating firmware"
   fwupdmgr refresh || true
-  fwupdmgr upgrade
+  fwupdmgr upgrade || true
 fi
 
 touch "$STATE_DIR/updated"
