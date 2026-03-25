@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc projects new <name>" 1 1 "$@"
 process::require git
-process::require_args "$#" 1 1 "Usage: sc projects new <name>"
 
 mkdir -p "$PROJECTS_DIR"
 

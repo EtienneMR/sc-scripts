@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc self update" 0 0 "$@"
 process::require git
 
 log::info "Fetching updates"

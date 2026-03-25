@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 1 2 "Usage: sc tunnel <port> [path]"
-state::dir "tunnel" STATE_DIR
+process::usage "sc tunnel <port> [path]" 1 2 "$@"
+state::dir "web/tunnel" STATE_DIR
 
 TUNNEL_PORT="$1"
 TUNNEL_PATH="${2:-/}"
@@ -30,6 +30,9 @@ tunnel_pid=$!
 
 log::info "Waiting for tunnel"
 process::wait_output "$LOGS_DIR/cloudflared.log" "https://[A-Za-z0-9._-]+\.trycloudflare\.com" HOST
+
+# Ensure tunnel is really up (prevent DNS from caching an error)
+sleep 3
 
 log::success "Tunnel ready at: $HOST$TUNNEL_PATH"
 

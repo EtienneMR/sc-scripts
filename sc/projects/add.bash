@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc projects add [target] [name]" 0 2 "$@"
 process::require git
-process::require_args "$#" 0 2 "Usage: sc projects add [target] [name]"
 
 if [ "$#" -ge 1 ]; then
   TARGET="$(realpath "$1")"

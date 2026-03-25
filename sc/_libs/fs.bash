@@ -27,7 +27,6 @@ fs::all_files() {
   done
 
   mapfile -t "$_var" < <(find "${roots[@]}" "${exclude[@]}" -type f | sort)
-
 }
 
 fs::each_ext() {

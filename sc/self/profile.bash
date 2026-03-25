@@ -1,19 +1,22 @@
 source "$SC_LIBS"
+core::init
+process::usage "sc self profile" 0 0 "$@"
 
 _profile::bash() {
   cat <<'EOF'
 _sc_complete() {
-    local cur raw line
+    local cur="${COMP_WORDS[COMP_CWORD]}"
     local -a before suggestions
     COMPREPLY=()
-    cur="${COMP_WORDS[COMP_CWORD]}"
+
     before=("${COMP_WORDS[@]:1:COMP_CWORD-1}")
-    if [[ ${#before[@]} -eq 0 ]]; then
-        raw=$( sc --complete "$cur" 2>/dev/null )
+
+    if (( ${#before[@]} )); then
+        mapfile -t suggestions < <(sc --complete "${before[@]}" "$cur" 2>/dev/null)
     else
-        raw=$( sc --complete "${before[@]}" "$cur" 2>/dev/null )
+        mapfile -t suggestions < <(sc --complete "$cur" 2>/dev/null)
     fi
-    while IFS= read -r line; do [[ -n "$line" ]] && suggestions+=("$line"); done <<< "$raw"
+
     COMPREPLY=( $(compgen -W "${suggestions[*]}" -- "$cur") )
 }
 complete -F _sc_complete sc

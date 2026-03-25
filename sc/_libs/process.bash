@@ -23,16 +23,27 @@ process::detect_shell() {
   basename "${SHELL:-sh}"
 }
 
-process::require_args() {
-  local count="$1" min="$2" max="$3" usage="$4"
+process::usage() {
+  local description="$1" min="$2" max="$3"
+  shift 3
+
+  local arg
+  for arg in "$@"; do
+    if [ "$arg" = "--help" ] || [ "$arg" = "-h" ]; then
+      printf 'Usage: %s\n' "$description" >&2
+      exit 0
+    fi
+  done
+
+  local count="$#"
   if [ "$count" -lt "$min" ]; then
-    echo "error: expected at least $min arguments, got $#" >&2
-    echo "$usage" >&2
+    log::error "expected at least $min argument(s), got $count"
+    printf 'Usage: %s\n' "$description" >&2
     exit 1
   fi
-  if [ "$count" -gt "$max" ]; then
-    echo "error: expected at most $max arguments, got $#" >&2
-    echo "$usage" >&2
+  if [ "$count" != "+" ] && [ "$count" -gt "$max" ]; then
+    log::error "expected at most $max argument(s), got $count"
+    printf 'Usage: %s\n' "$description" >&2
     exit 1
   fi
 }
@@ -53,6 +64,11 @@ process::random_port() {
   done
 
   log::die "Could not find a free port after 10 attempts"
+}
+
+process::random_token() {
+  local _var="$1"
+  printf -v "$_var" '%s' "$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
 }
 
 _process::port_in_use() {

@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc projects list" 0 0 "$@"
 process::require git
-process::require_args "$#" 0 0 "Usage: sc projects list"
 
 log::column 30 "${C_BLUE}PROJECT${C_RESET}"
 log::column 20 "${C_GRAY}BRANCH${C_RESET}"

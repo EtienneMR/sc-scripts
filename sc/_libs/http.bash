@@ -13,10 +13,10 @@ http::get() {
   log::debug "Fetching $url"
   case "$HTTP_CLIENT" in
     curl)
-      curl -fSL "$url"
+      curl --fail --show-error --location "$url"
       ;;
     wget)
-      wget -O- "$url"
+      wget --output-document=- "$url"
       ;;
   esac
 }
@@ -30,10 +30,10 @@ http::download() {
   log::debug "Downloading $url to $out"
   case "$HTTP_CLIENT" in
     curl)
-      curl -fSL# "$url" -o "$out"
+      curl --fail --show-error --silent --progress-bar --location "$url" --output "$out"
       ;;
     wget)
-      wget -O --progress "$out" "$url"
+      wget --output-document="$out" "$url"
       ;;
   esac
 }

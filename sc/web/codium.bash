@@ -1,7 +1,10 @@
+# sc:alias wcode
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 0 0 "Usage: sc web-codium"
-state::dir "web-codium" STATE_DIR
+process::usage "sc web codium [dir-or-file]" 0 1 "$@"
+state::dir "web/codium" STATE_DIR
+
+DIR_OR_FILE="${1:-$(pwd -P)}"
 
 _codium_arch() {
   case "$(uname -m)" in
@@ -26,7 +29,11 @@ _install_codium() {
 github::ensure "codium" "VSCodium/vscodium" "$STATE_DIR/codium.version" _install_codium
 
 process::random_port "PORT"
-TOKEN="$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
+process::random_token "TOKEN"
+
+[ -f "$DIR_OR_FILE" ] && DIR_OR_FILE="$(dirname "$DIR_OR_FILE")"
+
+log::info "Starting codium on port $PORT (folder: $DIR_OR_FILE)"
 
 "$STATE_DIR/codium/bin/codium-server" \
   --port "$PORT" \
@@ -37,7 +44,7 @@ TOKEN="$(tr -dc 'a-zA-Z0-9' </dev/urandom 2>/dev/null | head -c 16 || true)"
   >/dev/null 2>&1 &
 codium_pid=$!
 
-"$SC" tunnel "$PORT" "?tkn=$TOKEN&folder=$(pwd -P)" &
+"$SC" web tunnel "$PORT" "?tkn=$TOKEN&folder=$DIR_OR_FILE" &
 tunnel_pid=$!
 
 process::wait_any_pid $codium_pid $tunnel_pid

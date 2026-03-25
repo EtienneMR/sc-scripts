@@ -1,7 +1,7 @@
-# sc:alias gwip
+# sc:alias gw
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 0 1 "Usage: sc git wip [message]"
+process::usage "sc git wip [message]" 0 1 "$@"
 process::require git
 
 "$SC" git unwip 2>/dev/null || true

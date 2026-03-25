@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc system status [-q]" 0 1 "$@"
 state::dir "system" STATE_DIR
 
 QUIET=0

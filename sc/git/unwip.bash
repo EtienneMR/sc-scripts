@@ -1,7 +1,7 @@
-# sc:alias gunwip
+# sc:alias guw
 source "$SC_LIBS"
 core::init
-process::require_args "$#" 0 0 "Usage: sc git unwip"
+process::usage "sc git unwip" 0 0 "$@"
 process::require git
 
 last="$(git log -1 --format=%s)"

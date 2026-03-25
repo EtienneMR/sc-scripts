@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc code fix [files...]" 0 + "$@"
 
 _fix_py() { process::py_run ruff check --fix --quiet "$@" || log::warn "No fixer for .py (install ruff)"; }
 

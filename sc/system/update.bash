@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc system update" 0 0 "$@"
 state::dir "system" STATE_DIR
 
 _update() {

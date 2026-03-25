@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc code format [files...]" 0 + "$@"
 
 _format_py() { process::py_run ruff format --quiet "$@" || process::py_run black --quiet "$@" || log::warn "No formatter for .py (install ruff or black)"; }
 

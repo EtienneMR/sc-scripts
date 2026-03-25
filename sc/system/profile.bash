@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc system profile" 0 0 "$@"
 
 cat <<'EOF'
 mkcd() { mkdir -p "$@" && cd "$_"; }
@@ -10,7 +11,7 @@ EOF
 if process::exists codium; then
   echo 'EDITOR="codium --wait"'
 else
-  echo 'EDITOR="$SC web-codium"'
+  echo 'EDITOR="$SC web codium"'
 fi
 
 if process::exists ssh-agent; then

@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc projects standup [days]" 0 1 "$@"
 process::require git
-process::require_args "$#" 0 1 "Usage: sc projects standup [days]"
 
 DAYS="${1:-}"
 SINCE="${DAYS:-1} days ago"

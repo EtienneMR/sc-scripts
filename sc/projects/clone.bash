@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc projects clone <url> [name]" 1 2 "$@"
 process::require git
-process::require_args "$#" 1 2 "Usage: sc projects clone <url> [name]"
 
 mkdir -p "$PROJECTS_DIR"
 

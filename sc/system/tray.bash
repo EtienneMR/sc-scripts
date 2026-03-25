@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc system tray" 0 0 "$@"
 process::require yad
 
 ICON_WARN="dialog-warning"

@@ -1,5 +1,6 @@
 source "$SC_LIBS"
 core::init
+process::usage "sc self install" 0 0 "$@"
 
 rc_file() {
   case "$(process::detect_shell)" in
@@ -16,16 +17,22 @@ log::info "Adding sc to $LOCAL_BIN"
 mkdir -p "$LOCAL_BIN"
 fs::link "$SC" "$LOCAL_BIN/sc"
 
+log::info "Running migrations"
+for script in "$SC_ROOT/sc/_migrations"/*; do
+  log::debug "Applying migration $script"
+  bash "$script"
+done
+
 RC=$(rc_file)
 log::info "Updating $RC"
 
 "$SC" utils append "$RC" "# SC INSTALL" <<EOF
 export PATH="\$HOME/.local/bin:\$PATH"
-$("$SC" self profile)
+$(LOG_DEBUG=0 "$SC" self profile)
 EOF
 
 "$SC" utils append "$RC" "# SC SYSTEM PROFILE" <<EOF
-$("$SC" system profile)
+$(LOG_DEBUG=0 "$SC" system profile)
 EOF
 
 if process::exists yad; then
@@ -44,7 +51,7 @@ Restart=on-failure
 WantedBy=default.target
 EOF
   systemctl --user daemon-reload
-  systemctl --user reenable --now sc-tray
+  systemctl --user enable --now sc-tray
 fi
 
 log::success "Done. Reload your shell: source $RC"
