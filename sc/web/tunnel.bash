@@ -18,7 +18,7 @@ _cloudflared_arch() {
 
 _install_cloudflared() {
   local version="$1"
-  http::download "$STATE_DIR/cloudflared" "https://github.com/cloudflare/cloudflared/releases/download/$version/cloudflared-linux-$(_cloudflared_arch)"
+  "$SC" http download "$STATE_DIR/cloudflared" "https://github.com/cloudflare/cloudflared/releases/download/$version/cloudflared-linux-$(_cloudflared_arch)"
   chmod +x "$STATE_DIR/cloudflared"
 }
 

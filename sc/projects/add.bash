@@ -1,13 +1,10 @@
+# sc:complete 0 compgen -df -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
-process::usage "sc projects add [target] [name]" 0 2 "$@"
+process::usage "sc projects add <target> [name]" 1 2 "$@"
 process::require git
 
-if [ "$#" -ge 1 ]; then
-  TARGET="$(realpath "$1")"
-else
-  TARGET="$(projects::find)"
-fi
+TARGET="$(realpath "$1")"
 NAME="${2:-$(basename "$TARGET")}"
 
 [ -d "$TARGET/.git" ] || log::die "Not a project: $TARGET"

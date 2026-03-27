@@ -18,11 +18,12 @@ _codium_arch() {
 _install_codium() {
   local version="$1"
   local tarball="$STATE_DIR/codium.tar.gz"
-  http::download "$tarball" \
+  local target="$STATE_DIR/codium"
+  "$SC" http download "$tarball" \
     "https://github.com/VSCodium/vscodium/releases/download/$version/vscodium-reh-web-linux-$(_codium_arch)-$version.tar.gz"
-  rm -rf "$STATE_DIR/codium"
-  mkdir "$STATE_DIR/codium"
-  tar -xzf "$tarball" -C "$STATE_DIR/codium"
+  rm -rf "$target"
+  mkdir "$target"
+  "$SC" archive extract "$tarball" "$target"
   rm "$tarball"
 }
 

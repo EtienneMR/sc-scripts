@@ -5,19 +5,8 @@ process::usage "sc self profile" 0 0 "$@"
 _profile::bash() {
   cat <<'EOF'
 _sc_complete() {
-    local cur="${COMP_WORDS[COMP_CWORD]}"
-    local -a before suggestions
-    COMPREPLY=()
-
-    before=("${COMP_WORDS[@]:1:COMP_CWORD-1}")
-
-    if (( ${#before[@]} )); then
-        mapfile -t suggestions < <(sc --complete "${before[@]}" "$cur" 2>/dev/null)
-    else
-        mapfile -t suggestions < <(sc --complete "$cur" 2>/dev/null)
-    fi
-
-    COMPREPLY=( $(compgen -W "${suggestions[*]}" -- "$cur") )
+    mapfile -t COMPREPLY < <(sc --complete "${COMP_WORDS[@]:1:COMP_CWORD}" 2>/dev/null)
+    [[ ${#COMPREPLY[@]} -eq 1 && "${COMPREPLY[0]}" == */ ]] && compopt -o nospace
 }
 complete -F _sc_complete sc
 EOF
@@ -26,14 +15,8 @@ EOF
 _profile::zsh() {
   cat <<'EOF'
 _sc_complete() {
-    local -a before suggestions
-    before=("${words[@]:1:$#words-2}")
-    local cur="${words[$#words]}"
-    if [[ ${#before[@]} -eq 0 ]]; then
-        suggestions=( $(sc --complete "$cur" 2>/dev/null) )
-    else
-        suggestions=( $(sc --complete "${before[@]}" "$cur" 2>/dev/null) )
-    fi
+    local -a suggestions
+    mapfile -t suggestions < <(sc --complete "${COMP_WORDS[@]}" 2>/dev/null)
     compadd -a suggestions
 }
 compdef _sc_complete sc

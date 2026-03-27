@@ -1,8 +1,10 @@
+# sc:complete 0 compgen -f -X '!*.cpp' -- "$COMP_CUR" ; compgen -d -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc cpp loop <file.cpp>" 1 1 "$@"
 
 FILE="$(realpath "$1")"
+MAKEFILE="$(pwd)/Makefile"
 temp::file OUT
 
 while :; do
@@ -11,5 +13,10 @@ while :; do
   cat "$OUT"
   echo
   log::debug "Polling for changes"
-  "$SC" utils poll-change "$FILE"
+
+  if [ -f "$MAKEFILE" ]; then
+    sleep 3
+  else
+    "$SC" utils poll-change "$FILE"
+  fi
 done

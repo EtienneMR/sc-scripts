@@ -41,7 +41,7 @@ process::usage() {
     printf 'Usage: %s\n' "$description" >&2
     exit 1
   fi
-  if [ "$count" != "+" ] && [ "$count" -gt "$max" ]; then
+  if [ "$max" != "+" ] && [ "$count" -gt "$max" ]; then
     log::error "expected at most $max argument(s), got $count"
     printf 'Usage: %s\n' "$description" >&2
     exit 1

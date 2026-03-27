@@ -11,7 +11,7 @@ _full_update() {
   local days msg
 
   if [ ! -f "$file" ]; then
-    [ "$QUIET" -eq 0 ] && log::warn "System has never been updated using sc" || true
+    [ "$QUIET" -eq 0 ] && log::warn "System has never been updated using sc"
     return
   fi
 

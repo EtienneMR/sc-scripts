@@ -42,7 +42,7 @@ def resolve(tokens: list, tree: dict) -> tuple:
     return (child, rest) if child is not None else (node, tokens[1:])
 
 
-def custom_completions(script: Path, partial: str) -> list:
+def custom_completions(script: Path, arg: int, partial: str) -> list:
     """Call a script's custom completion handler if it defines one."""
     marker = "# sc:complete "
     try:
@@ -53,15 +53,22 @@ def custom_completions(script: Path, partial: str) -> list:
                     break
                 if not line.startswith(marker):
                     continue
-                expr = line[len(marker) :]
+                line = line.removeprefix(marker)
+                completion_arg, line = line.split(" ", 1)
+                if completion_arg not in {"+", str(arg)}:
+                    continue
+
                 env = {**os.environ, "COMP_CUR": partial}
                 result = subprocess.run(
-                    ["bash", "-c", expr],
+                    ["bash", "-c", line],
                     capture_output=True,
                     text=True,
                     env=env,
                 )
-                return [w for w in result.stdout.splitlines() if w.startswith(partial)]
+                results = [
+                    w for w in result.stdout.splitlines() if w.startswith(partial)
+                ]
+                return [w + "/" if os.path.isdir(w) else w for w in results]
     except (OSError, UnicodeDecodeError):
         pass
     return []
@@ -76,7 +83,7 @@ def completions(tokens: list, tree: dict) -> list:
         return []
 
     if isinstance(node, Path):
-        return custom_completions(node, current)
+        return custom_completions(node, len(rest), current)
 
     if not rest:
         return [k for k in node if k.startswith(current)]
@@ -131,7 +138,7 @@ def main():
     if args and args[0] == "--complete":
         found = completions(args[1:], tree)
         if found:
-            print("\n".join(found))
+            print("\n".join(set(found)))
         return 0
 
     help_requested = any(a in HELP_FLAGS for a in args)

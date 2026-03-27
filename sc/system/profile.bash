@@ -8,10 +8,13 @@ mkt() { cd "$(mktemp -d)" && pwd; }
 cdl() { cd "$1" && ls -lA; }
 EOF
 
+echo -n "export EDITOR="
 if process::exists codium; then
-  echo 'EDITOR="codium --wait"'
+  echo '"codium --wait"'
+elif process::exists code; then
+  echo '"code --wait"'
 else
-  echo 'EDITOR="$SC web codium"'
+  echo '"sc web codium"'
 fi
 
 if process::exists ssh-agent; then
@@ -19,7 +22,7 @@ if process::exists ssh-agent; then
 if ! pgrep -u "$USER" ssh-agent > /dev/null; then
     ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
 fi
-if [ ! -f "$SSH_AUTH_SOCK" ]; then
+if [ ! -f "$SSH_AUTH_SOCK" ] && [ -f "$XDG_RUNTIME_DIR/ssh-agent.env" ]; then
     source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
 fi
 EOF

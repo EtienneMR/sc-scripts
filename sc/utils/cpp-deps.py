@@ -21,9 +21,9 @@ def local_includes(file: Path) -> list:
 
 
 def cpp_deps(entry: Path) -> list:
-    """Return ordered list of .cpp files to compile alongside entry."""
+    """Return ordered list of .cpp dependency files to compile alongside entry."""
     entry = entry.resolve()
-    visited = {entry}  # never re-visit, never emit the entry itself
+    visited = {entry}
     queue = deque([entry])
     deps = []
 
@@ -33,29 +33,48 @@ def cpp_deps(entry: Path) -> list:
             if header in visited:
                 continue
             visited.add(header)
-            # If the header has a sibling .cpp, it needs to be compiled too
             sibling = header.with_suffix(".cpp")
             if sibling.exists() and sibling not in visited:
                 visited.add(sibling)
                 deps.append(sibling)
-            # Traverse the header itself for transitive includes
             queue.append(header)
 
     return deps
 
 
+def to_obj(path: Path, cwd: Path) -> Path:
+    """Convert an absolute .cpp path to a build/relative.o path."""
+    try:
+        rel = path.relative_to(cwd)
+    except ValueError:
+        rel = path
+    return Path("build") / rel.with_suffix(".o")
+
+
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: cpp-deps.py <file.cpp>", file=sys.stderr)
+    args = sys.argv[1:]
+    make_objs = "--make-objs" in args
+    args = [a for a in args if not a.startswith("--")]
+
+    if len(args) != 1:
+        print("Usage: cpp-deps.py [--make-objs] <file.cpp>", file=sys.stderr)
         sys.exit(1)
 
-    entry = Path(sys.argv[1])
+    entry = Path(args[0])
     if not entry.exists():
-        print(f"error: file not found: {entry}", file=sys.stderr)
+        print(f"Error: file not found: {entry}", file=sys.stderr)
         sys.exit(1)
 
-    for dep in cpp_deps(entry):
-        print(dep)
+    deps = cpp_deps(entry)
+    cwd = Path.cwd()
+
+    if make_objs:
+        print(to_obj(entry.resolve(), cwd))
+        for dep in deps:
+            print(to_obj(dep, cwd))
+    else:
+        for dep in deps:
+            print(dep)
 
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+# sc:complete + compgen -fd -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc code format [files...]" 0 + "$@"

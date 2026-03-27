@@ -1,4 +1,6 @@
 # sc:alias aex
+# sc:complete 0 compgen -f -- "$COMP_CUR"
+# sc:complete 1 compgen -d -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc archive extract <archive> [output_dir]" 1 2 "$@"
@@ -16,10 +18,10 @@ mkdir -p "$OUTPUT" || log::die "Could not create output directory: $OUTPUT"
 log::info "Extracting $SRC_BASE → $OUTPUT"
 
 case "$SOURCE" in
-  *.tar.gz | *.tgz) tar_flag="-xzf" ;;
-  *.tar.bz2 | *.tbz2) tar_flag="-xjf" ;;
-  *.tar.xz | *.txz) tar_flag="-xJf" ;;
-  *.tar) tar_flag="-xf" ;;
+  *.tar.gz | *.tgz) tar_flag="z" ;;
+  *.tar.bz2 | *.tbz2) tar_flag="j" ;;
+  *.tar.xz | *.txz) tar_flag="J" ;;
+  *.tar) tar_flag="" ;;
   *.zip)
     process::require unzip
     unzip -q "$OUTPUT" "$SOURCE"
@@ -27,4 +29,4 @@ case "$SOURCE" in
   *) log::die "Unknown archive format: $SRC_BASE (supported: .tar.gz .tar.bz2 .tar.xz .tar .zip)" ;;
 esac
 
-tar "$tar_flag" "$SOURCE" -C "$OUTPUT"
+tar "xf$tar_flag" "$SOURCE" -C "$OUTPUT" --checkpoint=1000 --checkpoint-action='exec=printf "#"'
