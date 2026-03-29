@@ -35,7 +35,7 @@ EOF
 
 _profile::aliases() {
   local all_scripts
-  fs::all_files all_scripts "$SC_ROOT/sc"
+  fs::find all_scripts "$SC_ROOT/sc"
 
   local line name sc_cmd
   for script in "${all_scripts[@]}"; do

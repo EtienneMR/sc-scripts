@@ -1,4 +1,4 @@
-# sc:complete 0 compgen -df -- "$COMP_CUR"
+# sc:complete 0 compgen -d -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc projects add <target> [name]" 1 2 "$@"

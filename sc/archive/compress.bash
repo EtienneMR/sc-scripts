@@ -18,7 +18,7 @@ OUTPUT="${OUTPUT:-"$SRC_DIR/$SRC_BASE.tar.gz"}"
 
 log::info "Compressing $SRC_BASE → $(basename "$OUTPUT")"
 
-fs::all_files FILES "$SOURCE"
+fs::find FILES "$SOURCE"
 RELATIVE=("${FILES[@]#"$ROOT/"}")
 
 case "$OUTPUT" in
