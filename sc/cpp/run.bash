@@ -4,39 +4,33 @@ core::init
 process::usage "sc cpp run <file.cpp>" 1 1 "$@"
 process::require COMPILER "clang++" "g++"
 
-log::debug "Opening fd 3"
-2>/dev/null >&3 || exec 3>&1
-
 FILE="$(realpath "$1")"
 MAKEFILE="$(pwd)/Makefile"
 
 if [ -f "$MAKEFILE" ]; then
-  KEEP_COLOR=$LOG_COLOR "$SC" cpp makefile "$FILE" 3>&1 | log::overwrite >&3
+  "$SC" cpp makefile "$FILE"
 
-  RELATIVE="dist/$(basename "${FILE%.cpp}")"
-  BIN="$(pwd)/$RELATIVE"
+  BIN="dist/$(realpath --relative-to=. "${FILE%.*}")"
 
-  log::info "Making binary" | log::overwrite >&3
-
-  make "$RELATIVE" >/dev/null
+  log::status "Making binary"
+  make "$BIN" >/dev/null
 else
-  COMPILE_COMMAND="$COMPILER -Wall -Wextra -fcolor-diagnostics"
+  COMPILE_COMMAND="$COMPILER -Wall -Wextra ${CXXFLAGS:-}"
 
   temp::file BIN
 
-  log::info "Resolving dependencies" | log::overwrite >&3
+  log::status "Resolving dependencies"
   log::debug "Resolving dependencies for $FILE"
   mapfile -t DEPS < <("$SC" utils cpp-deps "$FILE") || log::die "Dependency resolution failed"
   log::debug "Dependencies: ${DEPS[*]}"
 
-  log::info "Compiling $((${#DEPS[@]} + 1)) files" | log::overwrite >&3
+  log::status "Compiling $((${#DEPS[@]} + 1)) file(s)"
   $COMPILE_COMMAND "${DEPS[@]}" "$FILE" -o "$BIN" >&2 || log::die "Compilation failed"
 fi
 
 IN="${FILE%.cpp}.in"
-[ -f "$IN" ] || IN="/dev/null"
+[ -f "$IN" ] || IN="/dev/stdin"
 
-log::info "Running entrypoint" | log::overwrite >&3
-echo >&3
+log::status "Running"
 
 "$BIN" <"$IN" || log::die "Execution failed (return code $?)"

@@ -1,4 +1,4 @@
-# sc:alias aco
+# sc:alias ac
 # sc:complete 0 compgen -fd -- "$COMP_CUR"
 # sc:complete 1 compgen -f -- "$COMP_CUR"
 source "$SC_LIBS"
@@ -18,7 +18,7 @@ OUTPUT="${OUTPUT:-"$SRC_DIR/$SRC_BASE.tar.gz"}"
 
 log::info "Compressing $SRC_BASE → $(basename "$OUTPUT")"
 
-fs::all_files FILES "$SOURCE"
+fs::find FILES "$SOURCE"
 RELATIVE=("${FILES[@]#"$ROOT/"}")
 
 case "$OUTPUT" in

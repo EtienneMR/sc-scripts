@@ -16,6 +16,28 @@ fs::link() {
   ln -sfn "$relative" "$target"
 }
 
+fs::find() {
+  local _var="$1"
+  local root="$2"
+  shift 2
+
+  local args=(-type f)
+  for _name in "${FS_EXCLUDE_NAMES[@]}"; do
+    args+=(-not -path "*/$_name/*")
+  done
+
+  if [ "$#" -gt 0 ]; then
+    args+=("(" -name "$1")
+    shift
+    for _name in "$@"; do
+      args+=(-o -name "$_name")
+    done
+    args+=(")")
+  fi
+
+  mapfile -t "$_var" < <(cd "$root" && find . "${args[@]}" -exec realpath {} \; | sort)
+}
+
 fs::all_files() {
   local _var="$1"
   shift
