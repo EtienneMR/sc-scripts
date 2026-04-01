@@ -9,3 +9,14 @@ system::reboot_required() {
   fi
   return 1
 }
+
+system::pm() {
+  if process::exists paru; then
+    paru "$@"
+  elif process::exists yay; then
+    yay "$@"
+  else
+    process::require pacman
+    sudo pacman "$@"
+  fi
+}

@@ -11,15 +11,6 @@ _update() {
   "$@" || log::warn "$name update failed"
 }
 
-_pacman() {
-  if process::exists paru; then
-    paru "$@"
-  elif process::exists yay; then
-    yay "$@"
-  else
-    sudo pacman "$@"
-  fi
-}
 
 _prompt_reboot() {
   system::reboot_required || return 0
@@ -36,9 +27,8 @@ fi
 
 if process::exists pacman; then
   log::info "Upgrading system packages"
-  _pacman -Syu || true
-  mapfile -t orphans < <(_pacman -Qdtq || true)
-  [ "${#orphans[@]}" -gt 0 ] && _pacman -Rns "${orphans[@]}"
+  system::pm -Syu || true
+  "$SC" pkg orphans --remove
 fi
 
 _update flatpak flatpak update --user
