@@ -75,8 +75,12 @@ def custom_completions(script: Path, arg: int, partial: str) -> list:
 
 
 def completions(tokens: list, tree: dict) -> list:
-    """Return valid next tokens given already-typed tokens (last may be partial)."""
+    """Return valid next tokens given already-typed tokens (including a plus token, last may be partial)."""
     *prefix, current = tokens
+    if current == "+":
+        current = ""
+    else:
+        prefix.remove("+")
 
     node, rest = resolve(prefix, tree)
     if node is None:

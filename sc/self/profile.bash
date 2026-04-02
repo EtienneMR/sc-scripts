@@ -4,32 +4,41 @@ process::usage "sc self profile" 0 0 "$@"
 
 _profile::bash() {
   cat <<'EOF'
-_sc_complete() {
-    mapfile -t COMPREPLY < <(sc --complete "${COMP_WORDS[@]:1:COMP_CWORD}" 2>/dev/null)
-    [[ ${#COMPREPLY[@]} -eq 1 && "${COMPREPLY[0]}" == */ ]] && compopt -o nospace
+_sc_alias() {
+    local name="$1"
+    shift
+
+    [ "$#" -gt 0 ] && eval "alias $name='sc $*'"
+    eval "
+_sc_complete_$name() {
+    mapfile -t COMPREPLY < <(sc --complete $* + "\${COMP_WORDS[@]:1:COMP_CWORD}" 2>/dev/null)
+    [[ \${#COMPREPLY[@]} -eq 1 && "\${COMPREPLY[0]}" == */ ]] && compopt -o nospace
 }
-complete -F _sc_complete sc
+complete -F _sc_complete_$name $name
+"
+}
+_sc_alias sc
 EOF
 }
 
 _profile::zsh() {
   cat <<'EOF'
-_sc_complete() {
+_sc_alias() {
+    local name="$1"
+    shift
+
+    [ "$#" -gt 0 ] && eval "alias $name='sc $*'"
+    eval "$(cat <<ALIAS
+_sc_complete_$name() {
     local -a suggestions
-    mapfile -t suggestions < <(sc --complete "${COMP_WORDS[@]}" 2>/dev/null)
+    suggestions=( \${(f)"\$(sc --complete $* + "\${words[@]:1}")"} )
     compadd -a suggestions
 }
-compdef _sc_complete sc
-EOF
+compdef _sc_complete_$name $name
+ALIAS
+)"
 }
-
-_profile::fish() {
-  cat <<'EOF'
-function __fish_sc_complete
-    set -l tokens (commandline -opc); set -e tokens[1]
-    sc --complete $tokens (commandline -ct) 2>/dev/null
-end
-complete -c sc -f -a '(__fish_sc_complete)'
+_sc_alias sc
 EOF
 }
 
@@ -44,15 +53,17 @@ _profile::aliases() {
       [[ $line =~ ^#\ sc:alias\ ([^[:space:]]+) ]] || continue
       name="${BASH_REMATCH[1]}"
       sc_cmd="$(realpath --relative-to="$SC_ROOT/sc" "$script" | sed 's/\.[^.]*$//' | tr '/' ' ')"
-      echo "alias $name='sc $sc_cmd'"
+      echo "_sc_alias $name $sc_cmd"
     done <"$script"
   done
 }
 
-_profile::aliases
 case "$(process::detect_shell)" in
   bash) _profile::bash ;;
   zsh) _profile::zsh ;;
-  fish) _profile::fish ;;
-  *) log::warn "Unrecognized shell: completion not installed" ;;
+  *)
+    log::warn "Unrecognized shell: completion not installed"
+    exit 0
+    ;;
 esac
+_profile::aliases

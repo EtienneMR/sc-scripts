@@ -11,7 +11,6 @@ _update() {
   "$@" || log::warn "$name update failed"
 }
 
-
 _prompt_reboot() {
   system::reboot_required || return 0
   log::warn "Reboot required"

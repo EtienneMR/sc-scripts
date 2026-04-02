@@ -6,13 +6,13 @@ process::usage "sc pkg orphans [--remove] <packages...>" 0 + "$@"
 
 REMOVE=0
 if [ "${1:-}" = "--remove" ]; then
-    REMOVE=1
-    shift
+  REMOVE=1
+  shift
 fi
 
 if [ "$#" -gt 0 ]; then
-    log::info "Marking packages as deps"
-    system::pm -D --asdeps "$@"
+  log::info "Marking packages as deps"
+  system::pm -D --asdeps "$@"
 fi
 
 mapfile -t ORPHANS < <(pacman -Qdtq)
