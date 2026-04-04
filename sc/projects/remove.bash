@@ -1,4 +1,4 @@
-# sc:complete 0 ls -1 "${SC_PROJECTS_DIR:-$HOME/projects}" 2>/dev/null
+# sc:complete 0 ls -1 "${SC_PROJECTS_DIR:-$HOME/projects}"
 source "$SC_LIBS"
 process::usage "sc projects remove <name>" 1 1 "$@"
 core::init

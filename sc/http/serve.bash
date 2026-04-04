@@ -9,4 +9,4 @@ DIR="${2:-$(pwd -P)}"
 
 log::info "Serving $DIR on port $PORT"
 
-python -m http.server -d "$DIR" "$PORT"
+python3 -m http.server -d "$DIR" "$PORT"

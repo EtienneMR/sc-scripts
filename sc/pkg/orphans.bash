@@ -1,5 +1,6 @@
 # sc:alias po
-# sc:complete + pacman -Qeq && echo "--remove"
+# sc:complete * pacman -Qeq
+# sc:complete 0 echo "--remove"
 source "$SC_LIBS"
 core::init
 process::usage "sc pkg orphans [--remove] <packages...>" 0 + "$@"

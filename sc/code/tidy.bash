@@ -1,4 +1,4 @@
-# sc:complete + compgen -fd -- "$COMP_CUR"
+# sc:complete * compgen -fd -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc code tidy [files...]" 0 + "$@"

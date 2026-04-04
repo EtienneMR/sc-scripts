@@ -1,4 +1,3 @@
-# sc:alias wterm
 source "$SC_LIBS"
 core::init
 process::usage "sc web terminal [command]" 0 1 "$@"

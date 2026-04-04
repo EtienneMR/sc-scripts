@@ -24,8 +24,8 @@ fi
 
 if ! git diff --cached --quiet; then
   log::info "Files to be committed"
-  git -c color.ui=always status -s --untracked-files=all
-  
+  git -c color.ui=always status -suno --untracked-files=all
+
   read -e -p "msg: " MESSAGE
   [[ -n ${MESSAGE:-} ]] || log::die "Empty commit message"
   git commit -m "$MESSAGE"

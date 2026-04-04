@@ -1,4 +1,4 @@
-# sc:complete + compgen -f -X '!*.cpp' -- "$COMP_CUR" ; compgen -d -- "$COMP_CUR"
+# sc:complete * compgen -f -X '!*.cpp' -- "$COMP_CUR" ; compgen -d -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc cpp makefile [file.cpp...]" 0 + "$@"

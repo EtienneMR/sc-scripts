@@ -1,7 +1,7 @@
 source "$SC_LIBS"
 core::init
 process::usage "sc http get <url>" 1 1 "$@"
-process::require HTTP_CLIENT "curl" "wget" "python"
+process::require HTTP_CLIENT "curl" "wget" "python3"
 
 URL="$1"
 
@@ -12,8 +12,8 @@ case "$HTTP_CLIENT" in
   wget)
     wget --output-document=- "$URL"
     ;;
-  python)
-    python - "$URL" <<'PY'
+  python3)
+    python3 - "$URL" <<'PY'
 from urllib.request import urlopen
 from sys import stdout, argv
 

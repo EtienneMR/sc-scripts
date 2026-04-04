@@ -3,43 +3,48 @@ core::init
 process::usage "sc self profile" 0 0 "$@"
 
 _profile::bash() {
-  cat <<'EOF'
+  cat <<'BASH'
+_sc_complete() {
+    mapfile -t COMPREPLY < <(sc --complete "$@" "${COMP_WORDS[@]:1:COMP_CWORD}")
+    [[ ${#COMPREPLY[@]} -eq 1 && "${COMPREPLY[0]}" == */ ]] && compopt -o nospace
+}
 _sc_alias() {
     local name="$1"
     shift
 
-    [ "$#" -gt 0 ] && eval "alias $name='sc $*'"
+    [ "$#" -gt 0 ] && alias "$name=sc $*"
     eval "
-_sc_complete_$name() {
-    mapfile -t COMPREPLY < <(sc --complete $* + "\${COMP_WORDS[@]:1:COMP_CWORD}" 2>/dev/null)
-    [[ \${#COMPREPLY[@]} -eq 1 && "\${COMPREPLY[0]}" == */ ]] && compopt -o nospace
-}
+_sc_complete_$name() { _sc_complete $*; }
 complete -F _sc_complete_$name $name
 "
 }
 _sc_alias sc
-EOF
+BASH
 }
 
 _profile::zsh() {
-  cat <<'EOF'
+  cat <<'ZSH'
+_sc_complete() {
+    local -a completions
+    completions=("${(@f)$(sc --complete "$@" "${words[@]:1:$((CURRENT-1))}")}")
+    if [[ ${#completions[@]} -eq 1 && "${completions[0]}" == */ ]]; then
+        compadd -S '' -- "${completions[@]}"
+    else
+        compadd -- "${completions[@]}"
+    fi
+}
 _sc_alias() {
     local name="$1"
     shift
-
-    [ "$#" -gt 0 ] && eval "alias $name='sc $*'"
-    eval "$(cat <<ALIAS
-_sc_complete_$name() {
-    local -a suggestions
-    suggestions=( \${(f)"\$(sc --complete $* + "\${words[@]:1}")"} )
-    compadd -a suggestions
-}
-compdef _sc_complete_$name $name
-ALIAS
-)"
+    [[ "$#" -gt 0 ]] && alias "$name=sc $*"
+    local args="$*"
+    eval "
+_sc_complete_${name}() { _sc_complete ${args}; }
+compdef _sc_complete_${name} ${name}
+"
 }
 _sc_alias sc
-EOF
+ZSH
 }
 
 _profile::aliases() {

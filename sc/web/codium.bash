@@ -1,4 +1,3 @@
-# sc:alias wcode
 source "$SC_LIBS"
 core::init
 process::usage "sc web codium [dir-or-file]" 0 1 "$@"

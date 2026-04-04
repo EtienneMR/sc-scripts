@@ -3,17 +3,10 @@ core::init
 process::usage "sc system profile" 0 0 "$@"
 
 cat <<'EOF'
+export EDITOR='sc edit'
+
 mkcd() { mkdir -p "$@" && cd "$_"; }
 cdl() { cd "$1" && ls -lA; }
+
+sc system status -q
 EOF
-
-echo -n "export EDITOR="
-if process::exists codium; then
-  echo '"codium --wait"'
-elif process::exists code; then
-  echo '"code --wait"'
-else
-  echo '"sc web codium"'
-fi
-
-echo 'sc system status -q'
