@@ -36,6 +36,9 @@ def append(file: str, marker: str, content: str) -> None:
     start = original.find(start_marker)
     end = original.find(end_marker)
 
+    if content.startswith(" KEEP", start + len(start_marker)):
+        return
+
     if start != -1 and end != -1 and start < end:
         # Replace existing block, preserving everything outside it
         new_text = original[:start] + block + original[end + len(end_marker) + 1 :]

@@ -1,3 +1,4 @@
+# sc:alias sup
 source "$SC_LIBS"
 core::init
 process::usage "sc system update" 0 0 "$@"
@@ -27,7 +28,7 @@ fi
 if process::exists pacman; then
   log::info "Upgrading system packages"
   system::pm -Syu || true
-  "$SC" pkg orphans --remove
+  "$SC" pkg orphans --remove || true
 fi
 
 _update flatpak flatpak update --user

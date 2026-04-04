@@ -70,14 +70,13 @@ for FILE in "${TARGETS[@]}"; do
   [ -f "$FILE" ] || log::die "File not found: $FILE"
 
   STEM="$(basename "$FILE" .cpp)"
-  KIND="${STEM##*.}"
   NAME="$(realpath --relative-to="$(pwd)" "${FILE%.*}")"
   TARGET="dist/$NAME"
 
-  case "$KIND" in
-    "main") GROUP="binaries" ;;
-    "test") GROUP="tests" ;;
-    *) GROUP="all" ;;
+  case "$STEM" in
+    main | *.main | *-main) GROUP="binaries" ;;
+    test | *.test | *-test) GROUP="tests" ;;
+    *) GROUP="other" ;;
   esac
 
   log::status "Updating target $NAME"
@@ -90,3 +89,6 @@ $TARGET: ${OBJS[*]}
 $GROUP: $TARGET
 MAKE
 done
+
+log::status::end
+log::success "$(realpath "$MAKEFILE")"
