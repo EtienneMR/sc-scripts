@@ -1,9 +1,11 @@
+# sc:alias wcode
+# sc:complete 0 compgen -d -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc web codium [dir-or-file]" 0 1 "$@"
 state::dir "web/codium" STATE_DIR
 
-DIR_OR_FILE="${1:-$(pwd -P)}"
+DIR_OR_FILE="$(realpath "${1:-$(pwd)}")"
 
 _codium_arch() {
   case "$(uname -m)" in

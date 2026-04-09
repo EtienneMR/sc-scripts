@@ -10,8 +10,14 @@ _tidy_ts() { _tidy_js "$@"; }
 _tidy_jsx() { _tidy_js "$@"; }
 _tidy_tsx() { _tidy_js "$@"; }
 
-_tidy_go() { process::py_run go fix "$@" || log::warn "No tidier for .go (install go)"; }
-_tidy_rs() { process::py_run cargo fix --edition-idioms --allow-dirty --allow-staged "$@" 2>/dev/null || log::warn "No tidier for .rs (install cargo)"; }
+_tidy_go() { process::exists go && go fix "$@" || log::warn "No tidier for .go (install go)"; }
+_tidy_rs() {
+    if process::exists cargo; then
+        cargo fix --edition-idioms --allow-dirty --allow-staged "$@" 2>/dev/null || true
+    else
+        log::warn "No tidier for .rs (install cargo)"
+    fi
+}
 
 fs::each_ext "Tidying" _tidy "$@"
 "$SC" code format "$@"

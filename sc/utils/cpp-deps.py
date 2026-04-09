@@ -5,8 +5,14 @@ from collections import deque
 
 INCLUDE_RE = re.compile(r'#\s*include\s+"([^"]+)"')
 
+def get_roots(cwd: Path) -> list:
+    try:
+        with (cwd / "compile_flags.txt").open() as f:
+            return [cwd / (l.removeprefix("-I").strip()) for l in f if l.startswith("-I")]
+    except OSError:
+        return []
 
-def local_includes(file: Path) -> list:
+def local_includes(file: Path, roots: list) -> list:
     """Return paths of all locally-quoted includes in file that exist on disk."""
     try:
         text = file.read_text(errors="replace")
@@ -14,13 +20,15 @@ def local_includes(file: Path) -> list:
         return []
     result = []
     for match in INCLUDE_RE.finditer(text):
-        candidate = (file.parent / match.group(1)).resolve()
-        if candidate.exists():
-            result.append(candidate)
+        path = match.group(1)
+        for root in [file.parent, *roots]:
+            candidate = (root / path).resolve()
+            if candidate.exists():
+                result.append(candidate)
     return result
 
 
-def cpp_deps(entry: Path) -> list:
+def cpp_deps(entry: Path, roots: list) -> list:
     """Return ordered list of .cpp dependency files to compile alongside entry."""
     entry = entry.resolve()
     visited = {entry}
@@ -29,7 +37,7 @@ def cpp_deps(entry: Path) -> list:
 
     while queue:
         current = queue.popleft()
-        for header in local_includes(current):
+        for header in local_includes(current, roots):
             if header in visited:
                 continue
             visited.add(header)
@@ -65,8 +73,9 @@ def main():
         print(f"Error: file not found: {entry}", file=sys.stderr)
         sys.exit(1)
 
-    deps = cpp_deps(entry)
-    cwd = Path.cwd()
+    cwd: Path = Path.cwd()
+    roots = get_roots(cwd)
+    deps = cpp_deps(entry, roots)
 
     if make_objs:
         print(to_obj(entry.resolve(), cwd))

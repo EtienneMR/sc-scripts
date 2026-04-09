@@ -1,4 +1,5 @@
 # sc:alias mkt
+# sc:complete * compgen -fd -- "$COMP_CUR"
 source "$SC_LIBS"
 core::init
 process::usage "sc mkt [files-to-clone...]" 0 + "$@"

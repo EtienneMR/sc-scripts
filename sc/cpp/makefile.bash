@@ -90,5 +90,4 @@ $GROUP: $TARGET
 MAKE
 done
 
-log::status::end
 log::success "$(realpath "$MAKEFILE")"
