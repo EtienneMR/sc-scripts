@@ -26,7 +26,11 @@ EDITORS=(code shell web files)
 
 _edit::code() {
   process::select CODE codium code || return 1
-  "$CODE" --wait "${TARGETS[@]}"
+  if [ "${#TARGETS[@]}" -eq 0 ] && [ -f "$TARGETS" ]; then
+    "$CODE" --wait "${TARGETS}"
+  else
+    "$CODE" "${TARGETS[@]}"
+  fi
   TARGETS=()
 }
 

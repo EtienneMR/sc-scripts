@@ -2,8 +2,10 @@ source "$SC_LIBS"
 core::init
 process::usage "sc self install" 0 0 "$@"
 
+TARGET_SHELL="$(process::detect_shell)"
+
 rc_file() {
-  case "$(process::detect_shell)" in
+  case "$TARGET_SHELL" in
     zsh) printf '%s/.zshrc' "$HOME" ;;
     bash) printf '%s/.bashrc' "$HOME" ;;
     ksh) printf '%s/.kshrc' "$HOME" ;;
@@ -54,4 +56,4 @@ EOF
   systemctl --user enable --now sc-tray
 fi
 
-log::success "Done. Reload your shell: source $RC"
+log::success "Done. Reload your shell: exec $TARGET_SHELL"
